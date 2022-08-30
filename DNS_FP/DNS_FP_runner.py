@@ -29,7 +29,7 @@ dns_dict = {}
 def send_DNS_request(dns_server: str, name: str, src_port: int, bar):
     dns_req = IP(dst=dns_server) / UDP(sport=src_port, dport=53) / DNS(rd=1, qd=DNSQR(qname=name, qtype="A"))
     start = time.time()
-    answer = sr1(dns_req, verbose=0, timeout=5*60)
+    answer = sr1(dns_req, verbose=0, timeout=1*60)
     end = time.time()
     with mutex:
         dns_dict[name] = {}
@@ -103,7 +103,7 @@ list_names = ['wikipedia.org', 'china.org.cn', 'fdgdhghfhfghfjfdhdh.com', 'cnbc.
               'tr-ex.me', 'tvtropes.org', 'tandfonline.com', 'amazon.in', 'archive.org']
 
 
-DNS_address = '2.119.99.133'
+DNS_address = '9.9.9.9'
 
 
 dict_1, time_1 = run_names_with_dns(DNS_address, list_names)
