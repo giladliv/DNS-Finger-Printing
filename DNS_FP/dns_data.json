@@ -1,1 +1,600 @@
-{"2.119.99.133": {"08/30/2022, 10:43:32": {"tvtropes.org": {"time": 60.01030158996582, "addr": "No answer received..."}, "fdgdhghfhfghfjfdhdh.com": {"time": 60.057212591171265, "addr": "No answer received..."}, "china.org.cn": {"time": 60.05820822715759, "addr": "No answer received..."}, "wikipedia.org": {"time": 60.06020426750183, "addr": "No answer received..."}, "tandfonline.com": {"time": 60.0382764339447, "addr": "No answer received..."}, "tr-ex.me": {"time": 60.10509753227234, "addr": "No answer received..."}, "amazon.in": {"time": 60.07617449760437, "addr": "No answer received..."}, "archive.org": {"time": 60.04625701904297, "addr": "No answer received..."}, "cnbc.com": {"time": 60.11706590652466, "addr": "No answer received..."}, "lexico.com": {"time": 62.052709341049194, "addr": "No answer received..."}}, "08/30/2022, 10:45:36": {"tvtropes.org": {"time": 60.07968735694885, "addr": "No answer received..."}, "fdgdhghfhfghfjfdhdh.com": {"time": 60.134559869766235, "addr": "No answer received..."}, "china.org.cn": {"time": 60.09860157966614, "addr": "No answer received..."}, "wikipedia.org": {"time": 61.72409772872925, "addr": "No answer received..."}, "tandfonline.com": {"time": 60.09765815734863, "addr": "No answer received..."}, "tr-ex.me": {"time": 61.70714330673218, "addr": "No answer received..."}, "amazon.in": {"time": 60.141541957855225, "addr": "No answer received..."}, "archive.org": {"time": 60.059754371643066, "addr": "No answer received..."}, "cnbc.com": {"time": 60.11461353302002, "addr": "No answer received..."}, "lexico.com": {"time": 61.71312642097473, "addr": "No answer received..."}}}, "8.8.8.8": {"08/30/2022, 10:46:51": {"archive.org": {"time": 0.2513291835784912, "addr": "207.241.224.2 "}, "amazon.in": {"time": 0.26329779624938965, "addr": "52.95.120.67 "}, "tandfonline.com": {"time": 0.27127671241760254, "addr": "104.18.18.218 "}, "wikipedia.org": {"time": 0.3031911849975586, "addr": "91.198.174.192 "}, "lexico.com": {"time": 0.3650245666503906, "addr": "151.101.194.133 "}, "cnbc.com": {"time": 0.3700110912322998, "addr": "50.234.250.31 "}, "fdgdhghfhfghfjfdhdh.com": {"time": 0.37699174880981445, "addr": "--"}, "china.org.cn": {"time": 0.5345733165740967, "addr": "202.130.245.42 "}, "tvtropes.org": {"time": 62.19054913520813, "addr": "No answer received..."}, "tr-ex.me": {"time": 62.19453763961792, "addr": "No answer received..."}}, "08/30/2022, 10:48:55": {"archive.org": {"time": 62.083290576934814, "addr": "No answer received..."}, "amazon.in": {"time": 0.22140741348266602, "addr": "54.239.33.92 "}, "tandfonline.com": {"time": 0.3011937141418457, "addr": "104.18.19.218 "}, "wikipedia.org": {"time": 0.28224706649780273, "addr": "91.198.174.192 "}, "lexico.com": {"time": 0.27227330207824707, "addr": "151.101.2.133 "}, "cnbc.com": {"time": 0.27426934242248535, "addr": "50.234.250.31 "}, "fdgdhghfhfghfjfdhdh.com": {"time": 0.32114076614379883, "addr": "--"}, "china.org.cn": {"time": 0.48171329498291016, "addr": "202.130.245.42 "}, "tvtropes.org": {"time": 0.26329874992370605, "addr": "65.9.112.48 "}, "tr-ex.me": {"time": 0.15957188606262207, "addr": "46.229.170.226 "}}}, "9.9.9.9": {"08/30/2022, 10:50:42": {"archive.org": {"time": 0.07878851890563965, "addr": "207.241.224.2 "}, "wikipedia.org": {"time": 0.12366628646850586, "addr": "91.198.174.192 "}, "china.org.cn": {"time": 0.1216738224029541, "addr": "202.130.245.42 "}, "fdgdhghfhfghfjfdhdh.com": {"time": 0.2243974208831787, "addr": "--"}, "cnbc.com": {"time": 0.22639250755310059, "addr": "50.234.250.31 "}, "lexico.com": {"time": 0.22040987014770508, "addr": "151.101.194.133 "}, "tr-ex.me": {"time": 0.3730041980743408, "addr": "46.229.170.226 "}, "amazon.in": {"time": 0.35505223274230957, "addr": "54.239.33.92 "}, "tandfonline.com": {"time": 0.5216379165649414, "addr": "104.18.19.218 "}, "tvtropes.org": {"time": 0.6263561248779297, "addr": "65.9.112.129 "}}, "08/30/2022, 10:51:44": {"archive.org": {"time": 0.08477377891540527, "addr": "207.241.224.2 "}, "wikipedia.org": {"time": 0.02293848991394043, "addr": "91.198.174.192 "}, "china.org.cn": {"time": 0.030886411666870117, "addr": "202.130.245.42 "}, "fdgdhghfhfghfjfdhdh.com": {"time": 0.03191375732421875, "addr": "--"}, "cnbc.com": {"time": 0.22938847541809082, "addr": "50.234.250.31 "}, "lexico.com": {"time": 0.022922992706298828, "addr": "151.101.194.133 "}, "tr-ex.me": {"time": 0.024930715560913086, "addr": "46.229.170.226 "}, "amazon.in": {"time": 0.2483384609222412, "addr": "54.239.33.92 "}, "tandfonline.com": {"time": 0.06582283973693848, "addr": "104.18.19.218 "}, "tvtropes.org": {"time": 0.3121626377105713, "addr": "65.9.112.92 "}}}}
+{
+  "2.119.99.133": {
+    "08/30/2022, 04:27:46": {
+      "tr-ex.me": {
+        "time": 0.20345449447631836,
+        "addr": "46.229.170.226 "
+      },
+      "cnbc.com": {
+        "time": 0.2403573989868164,
+        "addr": "50.234.250.31 "
+      },
+      "archive.org": {
+        "time": 0.20644593238830566,
+        "addr": "207.241.224.2 "
+      },
+      "tandfonline.com": {
+        "time": 0.21641826629638672,
+        "addr": "104.18.18.218 "
+      },
+      "tvtropes.org": {
+        "time": 0.254319429397583,
+        "addr": "13.226.175.52 "
+      },
+      "amazon.in": {
+        "time": 0.24534320831298828,
+        "addr": "54.239.33.92 "
+      },
+      "china.org.cn": {
+        "time": 0.5804457664489746,
+        "addr": "202.130.245.42 "
+      },
+      "lexico.com": {
+        "time": 302.1039414405823,
+        "addr": "No answer received..."
+      },
+      "fdgdhghfhfghfjfdhdh.com": {
+        "time": 302.1179060935974,
+        "addr": "No answer received..."
+      },
+      "wikipedia.org": {
+        "time": 302.12288999557495,
+        "addr": "No answer received..."
+      }
+    },
+    "08/30/2022, 04:33:51": {
+      "tr-ex.me": {
+        "time": 0.3091719150543213,
+        "addr": "46.229.170.226 "
+      },
+      "cnbc.com": {
+        "time": 1.7730040550231934,
+        "addr": "50.234.250.31 "
+      },
+      "archive.org": {
+        "time": 0.2573120594024658,
+        "addr": "207.241.224.2 "
+      },
+      "tandfonline.com": {
+        "time": 0.28822875022888184,
+        "addr": "104.18.19.218 "
+      },
+      "tvtropes.org": {
+        "time": 0.2912149429321289,
+        "addr": "13.226.175.52 "
+      },
+      "amazon.in": {
+        "time": 0.2911865711212158,
+        "addr": "54.239.33.92 "
+      },
+      "china.org.cn": {
+        "time": 0.1276564598083496,
+        "addr": "202.130.245.42 "
+      },
+      "lexico.com": {
+        "time": 0.14960002899169922,
+        "addr": "151.101.2.133 "
+      },
+      "fdgdhghfhfghfjfdhdh.com": {
+        "time": 0.32213902473449707,
+        "addr": "--"
+      },
+      "wikipedia.org": {
+        "time": 0.2214069366455078,
+        "addr": "185.15.58.224 "
+      }
+    },
+    "08/30/2022, 10:43:32": {
+      "tvtropes.org": {
+        "time": 60.01030158996582,
+        "addr": "No answer received..."
+      },
+      "fdgdhghfhfghfjfdhdh.com": {
+        "time": 60.057212591171265,
+        "addr": "No answer received..."
+      },
+      "china.org.cn": {
+        "time": 60.05820822715759,
+        "addr": "No answer received..."
+      },
+      "wikipedia.org": {
+        "time": 60.06020426750183,
+        "addr": "No answer received..."
+      },
+      "tandfonline.com": {
+        "time": 60.0382764339447,
+        "addr": "No answer received..."
+      },
+      "tr-ex.me": {
+        "time": 60.10509753227234,
+        "addr": "No answer received..."
+      },
+      "amazon.in": {
+        "time": 60.07617449760437,
+        "addr": "No answer received..."
+      },
+      "archive.org": {
+        "time": 60.04625701904297,
+        "addr": "No answer received..."
+      },
+      "cnbc.com": {
+        "time": 60.11706590652466,
+        "addr": "No answer received..."
+      },
+      "lexico.com": {
+        "time": 62.052709341049194,
+        "addr": "No answer received..."
+      }
+    },
+    "08/30/2022, 10:45:36": {
+      "tvtropes.org": {
+        "time": 60.07968735694885,
+        "addr": "No answer received..."
+      },
+      "fdgdhghfhfghfjfdhdh.com": {
+        "time": 60.134559869766235,
+        "addr": "No answer received..."
+      },
+      "china.org.cn": {
+        "time": 60.09860157966614,
+        "addr": "No answer received..."
+      },
+      "wikipedia.org": {
+        "time": 61.72409772872925,
+        "addr": "No answer received..."
+      },
+      "tandfonline.com": {
+        "time": 60.09765815734863,
+        "addr": "No answer received..."
+      },
+      "tr-ex.me": {
+        "time": 61.70714330673218,
+        "addr": "No answer received..."
+      },
+      "amazon.in": {
+        "time": 60.141541957855225,
+        "addr": "No answer received..."
+      },
+      "archive.org": {
+        "time": 60.059754371643066,
+        "addr": "No answer received..."
+      },
+      "cnbc.com": {
+        "time": 60.11461353302002,
+        "addr": "No answer received..."
+      },
+      "lexico.com": {
+        "time": 61.71312642097473,
+        "addr": "No answer received..."
+      }
+    }
+  },
+  "8.8.8.8": {
+    "08/30/2022, 10:46:51": {
+      "archive.org": {
+        "time": 0.2513291835784912,
+        "addr": "207.241.224.2 "
+      },
+      "amazon.in": {
+        "time": 0.26329779624938965,
+        "addr": "52.95.120.67 "
+      },
+      "tandfonline.com": {
+        "time": 0.27127671241760254,
+        "addr": "104.18.18.218 "
+      },
+      "wikipedia.org": {
+        "time": 0.3031911849975586,
+        "addr": "91.198.174.192 "
+      },
+      "lexico.com": {
+        "time": 0.3650245666503906,
+        "addr": "151.101.194.133 "
+      },
+      "cnbc.com": {
+        "time": 0.3700110912322998,
+        "addr": "50.234.250.31 "
+      },
+      "fdgdhghfhfghfjfdhdh.com": {
+        "time": 0.37699174880981445,
+        "addr": "--"
+      },
+      "china.org.cn": {
+        "time": 0.5345733165740967,
+        "addr": "202.130.245.42 "
+      },
+      "tvtropes.org": {
+        "time": 62.19054913520813,
+        "addr": "No answer received..."
+      },
+      "tr-ex.me": {
+        "time": 62.19453763961792,
+        "addr": "No answer received..."
+      }
+    },
+    "08/30/2022, 10:48:55": {
+      "archive.org": {
+        "time": 62.083290576934814,
+        "addr": "No answer received..."
+      },
+      "amazon.in": {
+        "time": 0.22140741348266602,
+        "addr": "54.239.33.92 "
+      },
+      "tandfonline.com": {
+        "time": 0.3011937141418457,
+        "addr": "104.18.19.218 "
+      },
+      "wikipedia.org": {
+        "time": 0.28224706649780273,
+        "addr": "91.198.174.192 "
+      },
+      "lexico.com": {
+        "time": 0.27227330207824707,
+        "addr": "151.101.2.133 "
+      },
+      "cnbc.com": {
+        "time": 0.27426934242248535,
+        "addr": "50.234.250.31 "
+      },
+      "fdgdhghfhfghfjfdhdh.com": {
+        "time": 0.32114076614379883,
+        "addr": "--"
+      },
+      "china.org.cn": {
+        "time": 0.48171329498291016,
+        "addr": "202.130.245.42 "
+      },
+      "tvtropes.org": {
+        "time": 0.26329874992370605,
+        "addr": "65.9.112.48 "
+      },
+      "tr-ex.me": {
+        "time": 0.15957188606262207,
+        "addr": "46.229.170.226 "
+      }
+    }
+  },
+  "9.9.9.9": {
+    "08/30/2022, 10:50:42": {
+      "archive.org": {
+        "time": 0.07878851890563965,
+        "addr": "207.241.224.2 "
+      },
+      "wikipedia.org": {
+        "time": 0.12366628646850586,
+        "addr": "91.198.174.192 "
+      },
+      "china.org.cn": {
+        "time": 0.1216738224029541,
+        "addr": "202.130.245.42 "
+      },
+      "fdgdhghfhfghfjfdhdh.com": {
+        "time": 0.2243974208831787,
+        "addr": "--"
+      },
+      "cnbc.com": {
+        "time": 0.22639250755310059,
+        "addr": "50.234.250.31 "
+      },
+      "lexico.com": {
+        "time": 0.22040987014770508,
+        "addr": "151.101.194.133 "
+      },
+      "tr-ex.me": {
+        "time": 0.3730041980743408,
+        "addr": "46.229.170.226 "
+      },
+      "amazon.in": {
+        "time": 0.35505223274230957,
+        "addr": "54.239.33.92 "
+      },
+      "tandfonline.com": {
+        "time": 0.5216379165649414,
+        "addr": "104.18.19.218 "
+      },
+      "tvtropes.org": {
+        "time": 0.6263561248779297,
+        "addr": "65.9.112.129 "
+      }
+    },
+    "08/30/2022, 10:51:44": {
+      "archive.org": {
+        "time": 0.08477377891540527,
+        "addr": "207.241.224.2 "
+      },
+      "wikipedia.org": {
+        "time": 0.02293848991394043,
+        "addr": "91.198.174.192 "
+      },
+      "china.org.cn": {
+        "time": 0.030886411666870117,
+        "addr": "202.130.245.42 "
+      },
+      "fdgdhghfhfghfjfdhdh.com": {
+        "time": 0.03191375732421875,
+        "addr": "--"
+      },
+      "cnbc.com": {
+        "time": 0.22938847541809082,
+        "addr": "50.234.250.31 "
+      },
+      "lexico.com": {
+        "time": 0.022922992706298828,
+        "addr": "151.101.194.133 "
+      },
+      "tr-ex.me": {
+        "time": 0.024930715560913086,
+        "addr": "46.229.170.226 "
+      },
+      "amazon.in": {
+        "time": 0.2483384609222412,
+        "addr": "54.239.33.92 "
+      },
+      "tandfonline.com": {
+        "time": 0.06582283973693848,
+        "addr": "104.18.19.218 "
+      },
+      "tvtropes.org": {
+        "time": 0.3121626377105713,
+        "addr": "65.9.112.92 "
+      }
+    },
+    "09/04/2022, 16:49:10": {
+      "wikipedia.org": {
+        "time": 0.16456007957458496,
+        "addr": "91.198.174.192 "
+      },
+      "fdgdhghfhfghfjfdhdh.com": {
+        "time": 0.2569456100463867,
+        "addr": "--"
+      },
+      "cnbc.com": {
+        "time": 0.25595808029174805,
+        "addr": "50.234.250.32 "
+      },
+      "amazon.in": {
+        "time": 0.2759706974029541,
+        "addr": "54.239.33.92 "
+      },
+      "tandfonline.com": {
+        "time": 0.27992773056030273,
+        "addr": "104.18.18.218 "
+      },
+      "tvtropes.org": {
+        "time": 0.28288698196411133,
+        "addr": "65.9.112.101 "
+      },
+      "archive.org": {
+        "time": 0.2998964786529541,
+        "addr": "207.241.224.2 "
+      },
+      "tr-ex.me": {
+        "time": 0.3347818851470947,
+        "addr": "46.229.170.226 "
+      },
+      "china.org.cn": {
+        "time": 0.8950490951538086,
+        "addr": "202.130.245.42 "
+      },
+      "lexico.com": {
+        "time": 1.771064281463623,
+        "addr": "151.101.130.133 "
+      }
+    },
+    "09/04/2022, 16:50:13": {
+      "wikipedia.org": {
+        "time": 0.08241462707519531,
+        "addr": "91.198.174.192 "
+      },
+      "fdgdhghfhfghfjfdhdh.com": {
+        "time": 0.04506111145019531,
+        "addr": "--"
+      },
+      "cnbc.com": {
+        "time": 0.29506611824035645,
+        "addr": "50.234.250.31 "
+      },
+      "amazon.in": {
+        "time": 0.2824273109436035,
+        "addr": "54.239.33.92 "
+      },
+      "tandfonline.com": {
+        "time": 0.06428933143615723,
+        "addr": "104.18.18.218 "
+      },
+      "tvtropes.org": {
+        "time": 0.07891607284545898,
+        "addr": "65.9.112.101 "
+      },
+      "archive.org": {
+        "time": 0.25401926040649414,
+        "addr": "207.241.224.2 "
+      },
+      "tr-ex.me": {
+        "time": 0.07077527046203613,
+        "addr": "46.229.170.226 "
+      },
+      "china.org.cn": {
+        "time": 0.0809943675994873,
+        "addr": "202.130.245.42 "
+      },
+      "lexico.com": {
+        "time": 0.07073974609375,
+        "addr": "151.101.130.133 "
+      }
+    }
+  },
+  "62.149.128.4": {
+    "09/04/2022, 20:30:25": {
+      "wikipedia.org": {
+        "time": 0.30913233757019043,
+        "addr": "185.15.58.224 "
+      },
+      "tvtropes.org": {
+        "time": 0.3221111297607422,
+        "addr": "99.86.91.19 "
+      },
+      "amazon.in": {
+        "time": 0.3131215572357178,
+        "addr": "54.239.33.92 "
+      },
+      "lexico.com": {
+        "time": 0.3360259532928467,
+        "addr": "151.101.66.133 "
+      },
+      "archive.org": {
+        "time": 0.30913257598876953,
+        "addr": "207.241.224.2 "
+      },
+      "tr-ex.me": {
+        "time": 0.33107447624206543,
+        "addr": "46.229.170.226 "
+      },
+      "cnbc.com": {
+        "time": 0.3550224304199219,
+        "addr": "50.234.250.32 "
+      },
+      "fdgdhghfhfghfjfdhdh.com": {
+        "time": 0.35999560356140137,
+        "addr": "--"
+      },
+      "china.org.cn": {
+        "time": 0.40238332748413086,
+        "addr": "202.130.245.42 "
+      },
+      "tandfonline.com": {
+        "time": 62.073206424713135,
+        "addr": "No answer received..."
+      }
+    },
+    "09/04/2022, 20:32:29": {
+      "wikipedia.org": {
+        "time": 0.6404073238372803,
+        "addr": "185.15.58.224 "
+      },
+      "tvtropes.org": {
+        "time": 0.5611073970794678,
+        "addr": "99.86.91.60 "
+      },
+      "amazon.in": {
+        "time": 62.08700776100159,
+        "addr": "No answer received..."
+      },
+      "lexico.com": {
+        "time": 0.5670876502990723,
+        "addr": "151.101.194.133 "
+      },
+      "archive.org": {
+        "time": 0.5745940208435059,
+        "addr": "207.241.224.2 "
+      },
+      "tr-ex.me": {
+        "time": 0.4528841972351074,
+        "addr": "46.229.170.226 "
+      },
+      "cnbc.com": {
+        "time": 0.5720775127410889,
+        "addr": "50.234.250.31 "
+      },
+      "fdgdhghfhfghfjfdhdh.com": {
+        "time": 0.32298922538757324,
+        "addr": "--"
+      },
+      "china.org.cn": {
+        "time": 0.6937856674194336,
+        "addr": "202.130.245.42 "
+      },
+      "tandfonline.com": {
+        "time": 0.6493837833404541,
+        "addr": "104.18.19.218 "
+      }
+    }
+  },
+  "94.158.153.236": {
+    "09/04/2022, 20:41:30": {
+      "lexico.com": {
+        "time": 60.12370848655701,
+        "addr": "No answer received..."
+      },
+      "wikipedia.org": {
+        "time": 60.14664697647095,
+        "addr": "No answer received..."
+      },
+      "cnbc.com": {
+        "time": 60.13065528869629,
+        "addr": "No answer received..."
+      },
+      "tvtropes.org": {
+        "time": 60.10971522331238,
+        "addr": "No answer received..."
+      },
+      "fdgdhghfhfghfjfdhdh.com": {
+        "time": 60.15459370613098,
+        "addr": "No answer received..."
+      },
+      "tr-ex.me": {
+        "time": 60.123674392700195,
+        "addr": "No answer received..."
+      },
+      "china.org.cn": {
+        "time": 60.16057586669922,
+        "addr": "No answer received..."
+      },
+      "amazon.in": {
+        "time": 62.14069867134094,
+        "addr": "No answer received..."
+      },
+      "tandfonline.com": {
+        "time": 62.219488859176636,
+        "addr": "No answer received..."
+      },
+      "archive.org": {
+        "time": 62.618356466293335,
+        "addr": "No answer received..."
+      }
+    },
+    "09/04/2022, 20:43:04": {
+      "lexico.com": {
+        "time": 60.23597574234009,
+        "addr": "No answer received..."
+      },
+      "wikipedia.org": {
+        "time": 60.307782888412476,
+        "addr": "No answer received..."
+      },
+      "cnbc.com": {
+        "time": 60.23198437690735,
+        "addr": "No answer received..."
+      },
+      "tvtropes.org": {
+        "time": 60.20905375480652,
+        "addr": "No answer received..."
+      },
+      "fdgdhghfhfghfjfdhdh.com": {
+        "time": 60.32174801826477,
+        "addr": "No answer received..."
+      },
+      "tr-ex.me": {
+        "time": 60.20605659484863,
+        "addr": "No answer received..."
+      },
+      "china.org.cn": {
+        "time": 60.22400450706482,
+        "addr": "No answer received..."
+      },
+      "amazon.in": {
+        "time": 60.34921598434448,
+        "addr": "No answer received..."
+      },
+      "tandfonline.com": {
+        "time": 60.18212699890137,
+        "addr": "No answer received..."
+      },
+      "archive.org": {
+        "time": 60.213037729263306,
+        "addr": "No answer received..."
+      }
+    }
+  }
+}
