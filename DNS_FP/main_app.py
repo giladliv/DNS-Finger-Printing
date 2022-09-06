@@ -25,7 +25,7 @@ class pic_of_plot:
         self.subgroups_names = self.get_list_subgroups(list_names, 4)
         self.ind_plot = 0
 
-        self.fig, self.ax = plt.subplots(figsize=(9, 6))
+        self.fig, (self.ax, aaa) = plt.subplots(1, 2, figsize=(9, 6))
 
 
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.root)  # A tk.DrawingArea.
@@ -104,22 +104,25 @@ class pic_of_plot:
     def __click_next(self):
         self.__update_plot_of_bars(self.ind_plot + 1)
 
-    def __update_ax(self, labels, width=0.42):
+    def __update_ax(self, labels, width=0.1):
         right_col = [self.dict_1[name]['time'] for name in labels]
         left_col = [self.dict_2[name]['time'] for name in labels]
         x = np.arange(len(labels))  # the label locations
         self.ax.clear()
-        rects1 = self.ax.bar(x - width / 2, right_col, width, label=self.time_1)
-        rects2 = self.ax.bar(x + width / 2, left_col, width, label=self.time_2)
+
+        rects1 = self.ax.bar(x, right_col, width, label=self.time_1)
+        rects2 = self.ax.bar(x + width, left_col, width, label=self.time_2)
+        rects3 = self.ax.bar(x + 2*width, left_col, width, label=self.time_2 + '3')
 
         # Add some text for labels, title and custom x-axis tick labels, etc.
         self.ax.set_ylabel('time in seconds')
         self.ax.set_title(f'the receiving adresses from the DNS server {self.DNS_address}')
-        self.ax.set_xticks(x, labels, rotation=-15)
+        self.ax.set_xticks(x+width, labels, rotation=-15)
         self.ax.legend()
 
         self.ax.bar_label(rects1, padding=3, size=8, fmt='%.5f')
         self.ax.bar_label(rects2, padding=3, size=8, fmt='%.5f')
+        self.ax.bar_label(rects3, padding=3, size=8, fmt='%.5f')
         self.canvas.draw()
 
     @staticmethod

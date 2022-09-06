@@ -151,7 +151,7 @@ def main(is_rec_1, is_rec_2):
 
 if __name__ == "__main__":
     try:
-        main(True, False)
+        #main(True, False)
         main(False, False)
     except KeyboardInterrupt:
         print('Interrupted')
