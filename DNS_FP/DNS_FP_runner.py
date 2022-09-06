@@ -13,7 +13,7 @@ from alive_progress import alive_bar
 
 class DNS_FP_runner:
     def __init__(self, DNS_address, list_names):
-        self.FREE_PORTS = range(1024, 65536)
+        self.FREE_PORTS = range(49152, 65535) #(1024, 65536)
         self.mutex = Lock()
         self.JSON_FILE = 'dns_data.json'
         self.json_dict_total = {}
@@ -39,14 +39,20 @@ class DNS_FP_runner:
 
     # primary data of dns requests
 
-    def send_DNS_request(self, dns_server: str, name: str, src_port: int, bar, minutes_timeout: float = 1):
-        dns_req = IP(dst=dns_server) / UDP() / DNS(rd=0, qd=DNSQR(qname=name, qtype='A'))
-        minutes_timeout = int(minutes_timeout * 60)
-        answer = sr1(dns_req, verbose=0)#, timeout=minutes_timeout)
-        # with self.mutex:
+    def send_DNS_request(self, dns_server: str, name: str, src_port: int, bar, is_recusive: bool = False, sec_timeout: int = 5):
+        rd_flag = 1 if (is_recusive == True) else 0
+        answer = None
+        i = 0
+        dns_req = IP()
+        while answer is None and i < 4:
+            dns_req = IP(dst=dns_server) / UDP(sport=src_port, dport=53) / DNS(rd=rd_flag, qd=DNSQR(qname=name))#, qtype='A'))
+            answer = sr1(dns_req, verbose=0, timeout=sec_timeout)
+            src_port = random.randint(49152, 65535)
+            # with self.mutex:
+
         self.dns_dict[name] = {}
         self.dns_dict[name]['pkt'] = answer
-        self.dns_dict[name]['time'] = answer.time - dns_req.sent_time #end - start
+        self.dns_dict[name]['time'] = sec_timeout if (answer is None) else answer.time - dns_req.sent_time #end - start
         bar()
 
     def gen_port_names(self, add_names):
@@ -58,10 +64,10 @@ class DNS_FP_runner:
             i += 1
         return dict_names_ports
 
-    def run_names_with_dns(self):
-        return self.__run_names_with_dns(self.DNS_address, self.list_names)
+    def run_names_with_dns(self, is_recusive: bool = False):
+        return self.__run_names_with_dns(self.DNS_address, self.list_names, is_recusive)
 
-    def __run_names_with_dns(self, dns_main_ip, names):
+    def __run_names_with_dns(self, dns_main_ip, names, is_recusive: bool = False):
         th_list = []
         dict_names_ports = self.gen_port_names(names)
         # curr_time = str(time.time())
@@ -71,7 +77,7 @@ class DNS_FP_runner:
         with alive_bar(len(names), theme='classic') as bar:  ## for something nice
             for name in dict_names_ports:
                 port = dict_names_ports[name]
-                self.send_DNS_request(dns_main_ip, name, port, bar)
+                self.send_DNS_request(dns_main_ip, name, port, bar, is_recusive=is_recusive)
             #     th = threading.Thread(target=self.send_DNS_request, args=(dns_main_ip, name, port, bar))
             #     th_list += [th]
             #     th.start()
@@ -114,15 +120,15 @@ class DNS_FP_runner:
 
 #python DNS_FP_runner.py
 
-def main():
-    DNS_address = '62.219.128.128'
+def main(is_rec_1, is_rec_2):
+    DNS_address = '88.80.64.8'  #'88.80.64.8' # <--- GOODONE #'62.219.128.128'
     list_names = ['wikipedia.org', 'china.org.cn', 'fdgdhghfhfghfjfdhdh.com', 'cnbc.com', 'lexico.com',
                   'tr-ex.me', 'tvtropes.org', 'tandfonline.com', 'amazon.in', 'archive.org', 'www.amitdvir.com', 'nihonsport.com', 'aeon-ryukyu.jp', '4stringsjp.com']
     #list_names = ['xinshipu.com']
 
     dns_fp_run = DNS_FP_runner(DNS_address, list_names)
 
-    dict_1, time_1 = dns_fp_run.run_names_with_dns()
+    dict_1, time_1 = dns_fp_run.run_names_with_dns(is_recusive=is_rec_1)
 
     sec_time = 10
     with alive_bar(sec_time, title=f'Wait now {sec_time} seconds', theme='classic') as bar:
@@ -130,7 +136,7 @@ def main():
             time.sleep(1)
             bar()
 
-    dict_2, time_2 = dns_fp_run.run_names_with_dns()
+    dict_2, time_2 = dns_fp_run.run_names_with_dns(is_recusive=is_rec_2)
 
     # dict_1, time_1 = dns_fp_run.get_dict_times_of_dns(DNS_address, '09/04/2022, 16:49:10')
     # dict_2, time_2 = dns_fp_run.get_dict_times_of_dns(DNS_address, '09/04/2022, 16:50:13')
@@ -145,7 +151,8 @@ def main():
 
 if __name__ == "__main__":
     try:
-        main()
+        main(True, False)
+        main(False, False)
     except KeyboardInterrupt:
         print('Interrupted')
         try:
