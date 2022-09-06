@@ -120,28 +120,30 @@ class DNS_FP_runner:
 
 #python DNS_FP_runner.py
 
-def main(is_rec_1, is_rec_2):
-    DNS_address = '88.80.64.8'  #'88.80.64.8' # <--- GOODONE #'62.219.128.128'
-    list_names = ['wikipedia.org', 'china.org.cn', 'fdgdhghfhfghfjfdhdh.com', 'cnbc.com', 'lexico.com',
-                  'tr-ex.me', 'tvtropes.org', 'tandfonline.com', 'amazon.in', 'archive.org', 'www.amitdvir.com', 'nihonsport.com', 'aeon-ryukyu.jp', '4stringsjp.com']
+def main(DNS_address, list_names, repeats: int = 8, is_first_rec: bool = True):
+
     #list_names = ['xinshipu.com']
 
     dns_fp_run = DNS_FP_runner(DNS_address, list_names)
 
-    dict_1, time_1 = dns_fp_run.run_names_with_dns(is_recusive=is_rec_1)
+    list_ans_vals = []
+    for i in range(repeats):
+        is_rec = (i == 0) and is_first_rec
+        list_ans_vals += [dns_fp_run.run_names_with_dns(is_recusive=is_rec)]
 
-    sec_time = 10
-    with alive_bar(sec_time, title=f'Wait now {sec_time} seconds', theme='classic') as bar:
-        for i in range(sec_time):
-            time.sleep(1)
-            bar()
+        if i == repeats - 1:
+            continue
 
-    dict_2, time_2 = dns_fp_run.run_names_with_dns(is_recusive=is_rec_2)
+        sec_time = 10
+        with alive_bar(sec_time, title=f'Wait now {sec_time} seconds', theme='classic') as bar:
+            for i in range(sec_time):
+                time.sleep(1)
+                bar()
 
     # dict_1, time_1 = dns_fp_run.get_dict_times_of_dns(DNS_address, '09/04/2022, 16:49:10')
     # dict_2, time_2 = dns_fp_run.get_dict_times_of_dns(DNS_address, '09/04/2022, 16:50:13')
 
-    app = pic_of_plot(DNS_address, list_names, dict_1, time_1, dict_2, time_2)
+    app = pic_of_plot(DNS_address, list_names, list_ans_vals, cols_in_plot=3)
     app.runner()
     # fig.tight_layout()
     #
@@ -151,7 +153,11 @@ def main(is_rec_1, is_rec_2):
 
 if __name__ == "__main__":
     try:
-        main(True, False)
+        DNS_address = '88.80.64.8'  # '88.80.64.8' # <--- GOODONE #'62.219.128.128'
+        list_names = ['wikipedia.org', 'china.org.cn', 'fdgdhghfhfghfjfdhdh.com', 'cnbc.com', 'lexico.com',
+                      'tr-ex.me', 'tvtropes.org', 'tandfonline.com', 'amazon.in', 'archive.org', 'www.amitdvir.com',
+                      'nihonsport.com', 'aeon-ryukyu.jp', '4stringsjp.com']
+        main(DNS_address, list_names, repeats=3, is_first_rec=True)
         # main(False, False)
     except KeyboardInterrupt:
         print('Interrupted')

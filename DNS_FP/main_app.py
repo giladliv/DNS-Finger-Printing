@@ -11,23 +11,19 @@ from matplotlib.figure import Figure
 import numpy as np
 
 class pic_of_plot:
-    def __init__(self, DNS_address, list_names, dict_1, time_1, dict_2, time_2):
+    def __init__(self, DNS_address, list_names, list_dict_ans, cols_in_plot=3):
         self.root = tk.Tk()
         self.root.wm_title("Embedding in Tk")
         #self.root.state('zoomed')
-        self.dict_1 = dict_1
-        self.time_1 = time_1
-        self.dict_2 = dict_2
-        self.time_2 = time_2
-        self.list_dict_ans = [(dict_1, time_1), (dict_2, time_2)]
+        self.list_dict_ans = list_dict_ans
         self.DNS_address = DNS_address
 
         self.list_names = list_names
-        self.subgroups_names = self.get_list_subgroups(list_names, 2)
+        self.subgroups_names = self.get_list_subgroups(list_names, cols_in_plot)
         self.ind_plot = 0
 
         self.fig, (self.ax_time, self.ax_ttl) = plt.subplots(1, 2, figsize=(9, 6))
-
+        self.WIDTH = 0.7
 
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.root)  # A tk.DrawingArea.
         self.canvas.draw()
@@ -95,11 +91,12 @@ class pic_of_plot:
         self.ind_plot = ind
         return True
 
-    def __update_plot_of_bars(self, ind: int, width=0.75):
+    def __update_plot_of_bars(self, ind: int):
         if self.__change_index_plot(ind):
-            self.__update_ax(self.ax_time, 'time', self.subgroups_names[self.ind_plot], width, to_show_signs=False)
-            self.__update_ax(self.ax_ttl, 'time', self.subgroups_names[self.ind_plot], width, to_show_signs=True)
+            self.__update_ax(self.ax_time, 'time', self.subgroups_names[self.ind_plot], to_show_signs=False)
+            self.__update_ax(self.ax_ttl, 'time', self.subgroups_names[self.ind_plot], to_show_signs=True)
             self.canvas.draw()
+            self.label_pages['text'] = '%d / %d' % (ind + 1, len(self.subgroups_names))
             # self.fig.legend(loc=7)
             #self.fig.tight_layout()
 
@@ -115,33 +112,36 @@ class pic_of_plot:
         except:
             return ''
 
-    def __update_ax(self, ax, category, labels, width=0.5, to_show_signs: bool = False):
+    def __update_ax(self, ax, category, labels, to_show_signs: bool = False):
+        cols = []
         try:
-            right_col = [self.dict_1[name][category] for name in labels]
-            left_col = [self.dict_2[name][category] for name in labels]
+            for dict_col in self.list_dict_ans:
+                time = dict_col[1]
+                dict_col = dict_col[0]
+                cols += [[dict_col[name][category] for name in labels]]
         except:
             return
-        x = np.arange(len(labels))  # the label locations
+
+        x = np.arange(len(labels))*len(self.list_dict_ans)  # the label locations
         ax.clear()
 
-        mul_arr = np.array([a*4 for a in x])
-        rects1 = ax.bar(mul_arr, right_col, width=width, label=self.sub_str_find(self.time_1))
-        rects2 = ax.bar(mul_arr + width, left_col, width=width, label=self.sub_str_find(self.time_2))
-        rects3 = ax.bar(mul_arr + 2*width, left_col, width=width, label=self.sub_str_find(self.time_2) + '2')
-        rects4 = ax.bar(mul_arr + 3*width, left_col, width=width, label=self.sub_str_find(self.time_2) + '3')
+        #mul_arr = np.array([a*4 for a in x])
+        bars_list = []
+        i = 0
+        for (dict_col, time_col) in self.list_dict_ans:
+            bars_list += [ax.bar(x + i * self.WIDTH, cols[i], width=self.WIDTH, label=self.sub_str_find(time_col))]
+            i += 1
 
         # Add some text for labels, title and custom x-axis tick labels, etc.
         ax.set_ylabel('time in seconds')
         ax.set_title(f'the receiving adresses from the DNS server {self.DNS_address}')
-        ax.set_xticks(mul_arr + 3/2*width, labels, rotation=-15)
+        ax.set_xticks(x + self.WIDTH * (len(self.list_dict_ans) - 1) / 2, labels, rotation=-15)
         if to_show_signs:
             #ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
             ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-        ax.bar_label(rects1, padding=3, size=8, fmt='%.4f')
-        ax.bar_label(rects2, padding=3, size=8, fmt='%.4f')
-        ax.bar_label(rects3, padding=3, size=8, fmt='%.4f')
-        ax.bar_label(rects4, padding=3, size=8, fmt='%.4f')
+        for rects in bars_list:
+            ax.bar_label(rects, padding=3, size=8, fmt='%.4f')
 
 
     @staticmethod
