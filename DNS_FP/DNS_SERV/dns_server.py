@@ -43,3 +43,11 @@ print(answer[DNS].ancount)
 
 for x in range(answer[DNS].ancount):
     print(answer[DNSRR][x].ttl)
+
+def sub_date(t: str, sep : str = ', '):
+    try:
+        return t.split(sep)[1]
+    except:
+        return ''
+
+print(sub_date("sdfsd , sds", sep=', '))

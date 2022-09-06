@@ -19,13 +19,14 @@ class pic_of_plot:
         self.time_1 = time_1
         self.dict_2 = dict_2
         self.time_2 = time_2
+        self.list_dict_ans = [(dict_1, time_1), (dict_2, time_2)]
         self.DNS_address = DNS_address
 
         self.list_names = list_names
-        self.subgroups_names = self.get_list_subgroups(list_names, 4)
+        self.subgroups_names = self.get_list_subgroups(list_names, 2)
         self.ind_plot = 0
 
-        self.fig, (self.ax, aaa) = plt.subplots(1, 2, figsize=(9, 6))
+        self.fig, (self.ax_time, self.ax_ttl) = plt.subplots(1, 2, figsize=(9, 6))
 
 
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.root)  # A tk.DrawingArea.
@@ -94,9 +95,13 @@ class pic_of_plot:
         self.ind_plot = ind
         return True
 
-    def __update_plot_of_bars(self, ind: int, width=0.42):
+    def __update_plot_of_bars(self, ind: int, width=0.75):
         if self.__change_index_plot(ind):
-            self.__update_ax(self.subgroups_names[self.ind_plot], width)
+            self.__update_ax(self.ax_time, 'time', self.subgroups_names[self.ind_plot], width, to_show_signs=False)
+            self.__update_ax(self.ax_ttl, 'time', self.subgroups_names[self.ind_plot], width, to_show_signs=True)
+            self.canvas.draw()
+            # self.fig.legend(loc=7)
+            #self.fig.tight_layout()
 
     def __click_prev(self):
         self.__update_plot_of_bars(self.ind_plot - 1)
@@ -104,26 +109,40 @@ class pic_of_plot:
     def __click_next(self):
         self.__update_plot_of_bars(self.ind_plot + 1)
 
-    def __update_ax(self, labels, width=0.1):
-        right_col = [self.dict_1[name]['time'] for name in labels]
-        left_col = [self.dict_2[name]['time'] for name in labels]
-        x = np.arange(len(labels))  # the label locations
-        self.ax.clear()
+    def sub_str_find(self, t: str, sep :str = ', '):
+        try:
+            return t.split(sep)[1]
+        except:
+            return ''
 
-        rects1 = self.ax.bar(x, right_col, width, label=self.time_1)
-        rects2 = self.ax.bar(x + width, left_col, width, label=self.time_2)
-        rects3 = self.ax.bar(x + 2*width, left_col, width, label=self.time_2 + '3')
+    def __update_ax(self, ax, category, labels, width=0.5, to_show_signs: bool = False):
+        try:
+            right_col = [self.dict_1[name][category] for name in labels]
+            left_col = [self.dict_2[name][category] for name in labels]
+        except:
+            return
+        x = np.arange(len(labels))  # the label locations
+        ax.clear()
+
+        mul_arr = np.array([a*4 for a in x])
+        rects1 = ax.bar(mul_arr, right_col, width=width, label=self.sub_str_find(self.time_1))
+        rects2 = ax.bar(mul_arr + width, left_col, width=width, label=self.sub_str_find(self.time_2))
+        rects3 = ax.bar(mul_arr + 2*width, left_col, width=width, label=self.sub_str_find(self.time_2) + '2')
+        rects4 = ax.bar(mul_arr + 3*width, left_col, width=width, label=self.sub_str_find(self.time_2) + '3')
 
         # Add some text for labels, title and custom x-axis tick labels, etc.
-        self.ax.set_ylabel('time in seconds')
-        self.ax.set_title(f'the receiving adresses from the DNS server {self.DNS_address}')
-        self.ax.set_xticks(x+width, labels, rotation=-15)
-        self.ax.legend()
+        ax.set_ylabel('time in seconds')
+        ax.set_title(f'the receiving adresses from the DNS server {self.DNS_address}')
+        ax.set_xticks(mul_arr + 3/2*width, labels, rotation=-15)
+        if to_show_signs:
+            #ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+            ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-        self.ax.bar_label(rects1, padding=3, size=8, fmt='%.5f')
-        self.ax.bar_label(rects2, padding=3, size=8, fmt='%.5f')
-        self.ax.bar_label(rects3, padding=3, size=8, fmt='%.5f')
-        self.canvas.draw()
+        ax.bar_label(rects1, padding=3, size=8, fmt='%.4f')
+        ax.bar_label(rects2, padding=3, size=8, fmt='%.4f')
+        ax.bar_label(rects3, padding=3, size=8, fmt='%.4f')
+        ax.bar_label(rects4, padding=3, size=8, fmt='%.4f')
+
 
     @staticmethod
     def get_list_subgroups(list_to_part, num_lin_list: int = 10):
