@@ -1,0 +1,10 @@
+https://github.com/kirei/fpdns
+
+https://serverfault.com/questions/517087/dns-how-to-find-out-which-software-a-remote-dns-server-is-running
+
+https://linux.die.net/man/1/fpdns
+
+בדיקת FPDNS
+בדיקת מסיפרי גרסה 
+ניסיון איתור מספר שרתי DNS   מאחורי  ציוד NLB 
+ואז הם מופםעים בתור DNS אחד אבל בפועל יש כאן  קשים נפרדים
