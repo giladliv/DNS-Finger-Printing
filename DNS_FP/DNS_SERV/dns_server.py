@@ -34,12 +34,33 @@ from DNS_FP_runner import *
 #             client.send(resolve(bits[1]).encode())
 #     client.close()
 
+def install_and_import(package):
+    import importlib
+    try:
+        importlib.import_module(package)
+    except ImportError:
+        import pip
+        pip.main(['install', package])
+    finally:
+        globals()[package] = importlib.import_module(package)
+
+
+#install_and_import('transliterate')
+
 src_port = random.randint(49152, 65535)
 dns_req = IP(dst='83.103.36.213') / UDP(sport=src_port, dport=53) / DNS(rd=0, qd=DNSQR(qname='cnbc.com'))#, qtype='A'))
 answer = sr1(dns_req, timeout=5)
 answer.show()
 print()
+
+from time import gmtime, strftime, localtime
+
 print(answer[DNS].ancount)
+print('answer time:', answer.time)
+print(strftime("%a, %d %b %Y %H:%M:%S +0000", localtime(answer.time)),'\n')
+print('pkt time:', dns_req.sent_time)
+print(strftime("%a, %d %b %Y %H:%M:%S +0000", localtime(dns_req.sent_time)),'\n')
+print()
 
 for x in range(answer[DNS].ancount):
     print(answer[DNSRR][x].ttl)

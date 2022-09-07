@@ -14,12 +14,14 @@ import json
 from alive_progress import alive_bar
 
 MAX_WAIT = 5
+JSON_FILE_NAME_DEFAULT = 'dns_data.json'
+INTERVAL_WAIT_SEC = 10
 
 class DNS_FP_runner:
-    def __init__(self, DNS_address, list_names):
+    def __init__(self, DNS_address, list_names, json_file_name :str = JSON_FILE_NAME_DEFAULT):
         self.FREE_PORTS = range(49152, 65535) #(1024, 65536)
         self.mutex = Lock()
-        self.JSON_FILE = 'dns_data.json'
+        self.JSON_FILE = json_file_name if json_file_name.endswith('.json') else JSON_FILE_NAME_DEFAULT
         self.json_dict_total = {}
         self.dns_dict = {}
         self.DNS_address = DNS_address
@@ -50,15 +52,15 @@ class DNS_FP_runner:
         answer = None
         i = 0
         dns_req = IP()
+        time_recv = 0
         while answer is None and i < 4:
             dns_req = IP(dst=dns_server) / UDP(sport=src_port, dport=53) / DNS(rd=rd_flag, qd=DNSQR(qname=name))#, qtype='A'))
             answer = sr1(dns_req, verbose=0, timeout=sec_timeout)
             src_port = random.randint(49152, 65535)
             # with self.mutex:
 
+
         self.dns_dict[name] = {'pkt_recv': answer, 'pkt_sent': dns_req}
-        self.dns_dict[name]['pkt'] = answer
-        self.dns_dict[name]['time'] = sec_timeout if (answer is None) else answer.time - dns_req.sent_time #end - start
         bar()
 
     def get_data_from_pkts(self, pkt_dict : dict):
@@ -66,10 +68,12 @@ class DNS_FP_runner:
         dns_ttl = 0
         dns_time = MAX_WAIT
         if 'pkt_recv' not in pkt_dict or 'pkt_sent' not in pkt_dict:
-                return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl}
+                return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl, 'sent_time': 0, 'recv_time': 0}
 
         answer = pkt_dict['pkt_recv']
         dns_req = pkt_dict['pkt_sent']
+        sent_time = pkt_dict['pkt_sent'].sent_time
+        recv_time = sent_time + MAX_WAIT if answer is None else answer.time
         if answer is not None:
             # self.dns_dict[name].show()
 
@@ -83,7 +87,7 @@ class DNS_FP_runner:
                     dns_ttl += answer[DNSRR][i].ttl
                 dns_ttl = round(dns_ttl / RR_ans) # get average
 
-            return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl}
+            return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl, 'sent_time': sent_time, 'recv_time': recv_time}
 
     def gen_port_names(self, add_names):
         ports = sample(self.FREE_PORTS, len(add_names))
@@ -128,7 +132,7 @@ class DNS_FP_runner:
 
 #python DNS_FP_runner.py
 
-def main(DNS_address, list_names, repeats: int = 8, col_per_page:int = 2, is_first_rec: bool = True):
+def main(DNS_address, list_names, repeats: int = 8, col_per_page:int = 2, interval_wait_sec: int = INTERVAL_WAIT_SEC, is_first_rec: bool = True):
 
     #list_names = ['xinshipu.com']
 
@@ -143,7 +147,7 @@ def main(DNS_address, list_names, repeats: int = 8, col_per_page:int = 2, is_fir
         if i == repeats - 1:
             continue
 
-        sec_time = 10
+        sec_time = interval_wait_sec if (interval_wait_sec > 0) else INTERVAL_WAIT_SEC
         with alive_bar(sec_time, title=f'Wait now {sec_time} seconds', theme='classic') as bar:
             for i in range(sec_time):
                 time.sleep(1)
@@ -162,7 +166,7 @@ def get_app_by_time(DNS_address, list_names, col_per_page = 1):
     dns_fp_run = DNS_FP_runner(DNS_address, list_names)
 
     list_ans_vals = []
-    list_times = [*dns_fp_run.json_dict_total[DNS_address]][-10:]
+    list_times = [*dns_fp_run.json_dict_total[DNS_address]][-7:]
     for time_str in list_times:
         list_ans_vals += [dns_fp_run.get_dict_times_of_dns(DNS_address, time_str)]
 
@@ -179,7 +183,7 @@ if __name__ == "__main__":
     try:
         # 94.153.241.134 - intresting
         # 88.80.64.8 - good dns for check
-        DNS_address = '94.153.241.134'  # '88.80.64.8' # <--- GOODONE #'62.219.128.128'
+        DNS_address = '88.80.64.8'  # '88.80.64.8' # <--- GOODONE #'62.219.128.128'
         list_domain_names = ['wikipedia.org', 'china.org.cn', 'fdgdhghfhfghfjfdhdh.com', 'cnbc.com', 'lexico.com',
                       'tr-ex.me', 'tvtropes.org', 'tandfonline.com', 'amazon.in', 'archive.org', 'amitdvir.com',
                       'nihonsport.com', 'aeon-ryukyu.jp', '4stringsjp.com']
@@ -187,9 +191,9 @@ if __name__ == "__main__":
         # with open('list_of_domain_names.txt', 'w') as f:
         #     f.write('\n'.join(list_names))
 
-        #main(DNS_address, list_domain_names, repeats=7, col_per_page=2, is_first_rec=True)
+        #main(DNS_address, list_domain_names, repeats=6, col_per_page=2, is_first_rec=True)
 
-        get_app_by_time(DNS_address, list_domain_names, col_per_page=3)
+        get_app_by_time(DNS_address, list_domain_names, col_per_page=2)
     except KeyboardInterrupt:
         print('Interrupted')
         try:
