@@ -41,7 +41,7 @@ class DNS_FP_runner:
         with open(name_json, 'r') as f:
             self.json_dict_total = json.loads(f.read())
 
-    def save_to_json(self, name_json: str):
+    def save_to_json(self, name_json: str = JSON_FILE_NAME_DEFAULT):
         with open(name_json, 'w') as f:
             f.write(json.dumps(self.json_dict_total))
 
@@ -155,9 +155,14 @@ def main(DNS_address, list_names, repeats: int = 8, col_per_page:int = 2, interv
 
     # dict_1, time_1 = dns_fp_run.get_dict_times_of_dns(DNS_address, '09/04/2022, 16:49:10')
     # dict_2, time_2 = dns_fp_run.get_dict_times_of_dns(DNS_address, '09/04/2022, 16:50:13')
-
+    dns_fp_run.save_to_json()
+    print_list = []
+    for (dict_addr_final, curr_time) in list_ans_vals:
+        print_list += [dict_addr_final['amitdvir.com']]
+    print(print_list)
     app = pic_of_plot(DNS_address, list_names, list_ans_vals, cols_in_plot=col_per_page)
     app.runner()
+
 
 def get_app_by_time(DNS_address, list_names, col_per_page = 1):
 
@@ -191,9 +196,10 @@ if __name__ == "__main__":
         # with open('list_of_domain_names.txt', 'w') as f:
         #     f.write('\n'.join(list_names))
 
-        #main(DNS_address, list_domain_names, repeats=6, col_per_page=2, is_first_rec=True)
+        main(DNS_address, list_domain_names, repeats=8, col_per_page=2, is_first_rec=True)
 
-        get_app_by_time(DNS_address, list_domain_names, col_per_page=2)
+
+        #get_app_by_time(DNS_address, list_domain_names, col_per_page=2)
     except KeyboardInterrupt:
         print('Interrupted')
         try:
