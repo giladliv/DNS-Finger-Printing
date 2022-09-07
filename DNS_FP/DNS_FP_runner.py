@@ -132,7 +132,7 @@ class DNS_FP_runner:
 
 #python DNS_FP_runner.py
 
-def main(DNS_address, list_names, repeats: int = 8, col_per_page:int = 2, interval_wait_sec: int = INTERVAL_WAIT_SEC, is_first_rec: bool = True):
+def main(DNS_address, list_names, repeats: int = 8, col_per_page:int = 1, interval_wait_sec: int = INTERVAL_WAIT_SEC, is_first_rec: bool = True):
 
     #list_names = ['xinshipu.com']
 
@@ -159,7 +159,7 @@ def main(DNS_address, list_names, repeats: int = 8, col_per_page:int = 2, interv
     print_list = []
     for (dict_addr_final, curr_time) in list_ans_vals:
         print_list += [dict_addr_final['amitdvir.com']]
-    print(print_list)
+    #print(print_list)
     app = pic_of_plot(DNS_address, list_names, list_ans_vals, cols_in_plot=col_per_page)
     app.runner()
 
@@ -196,7 +196,7 @@ if __name__ == "__main__":
         # with open('list_of_domain_names.txt', 'w') as f:
         #     f.write('\n'.join(list_names))
 
-        main(DNS_address, list_domain_names, repeats=8, col_per_page=2, is_first_rec=True)
+        main(DNS_address, list_domain_names, repeats=4, is_first_rec=True)
 
 
         #get_app_by_time(DNS_address, list_domain_names, col_per_page=2)

@@ -51,14 +51,14 @@ def get_times_and_intervals(list_dict_res, str_value: str = ''):
     return start_end_list, intervals, values
 
 def set_coordinates_for_visable(widths, totals):
-    ret_cords = [0]
+
     curr_val = 0
+    ret_cords = [0]
     ret_both_vals = []
-    #mean_time = np.
     i = 1
     for w in widths:
         add_gap = 0 if i + 1 >= len(totals) else totals[i+1] - totals[i]
-        add_gap /= 10
+        add_gap /= 6
         ret_cords += [ret_cords[-1] + w + add_gap]
         ret_both_vals += [curr_val, curr_val + w]
         curr_val = curr_val + w + add_gap
@@ -77,7 +77,6 @@ bars1 = values
 r1 = []
 total = []
 for (s, e) in start_end_list:
-    r1 += [s]
     total += [s, e]
 
 r1, total_new = set_coordinates_for_visable(width, total)

@@ -90,7 +90,7 @@ class pic_of_plot:
         if self.__change_index_plot(ind):
             self.__update_ax(self.ax_time, 'time', self.subgroups_names[self.ind_plot],
                              y_title=self.ax_time_title, fmt='%.4f', to_show_signs=False)
-            self.__update_ax(self.ax_ttl, 'ttl', self.subgroups_names[self.ind_plot],
+            self.__update_ax_bars_2(self.ax_ttl, 'ttl', self.subgroups_names[self.ind_plot],
                              y_title=self.ax_ttl_title, fmt='%d', to_show_signs=True)
             self.canvas.draw()
             self.label_pages['text'] = '%d / %d' % (ind + 1, len(self.subgroups_names))
@@ -158,6 +158,72 @@ class pic_of_plot:
 
     def runner(self):
         self.root.mainloop()
+
+    def get_times_and_intervals(self, list_dict_res, str_value: str = ''):
+        min_time = float('inf')
+        for map_res in list_dict_res:
+            min_time = min(min_time, map_res['sent_time'])
+
+        start_end_list, intervals, values = [], [], []
+        for map_res in list_dict_res:
+            start_end_list += [(map_res['sent_time'] - min_time, map_res['recv_time'] - min_time)]
+            intervals += [map_res['time']]
+            values += [map_res[str_value]]
+        return start_end_list, intervals, values
+
+    def set_coordinates_for_visable(self, widths, totals):
+        curr_val = 1
+        ret_cords = []
+        ret_both_vals = []
+        i = 1
+        for w in widths:
+            add_gap = 0 if (i + 1 >= len(totals)) else (totals[i + 1] - totals[i])
+            add_gap -= 8
+            ret_cords += [curr_val]
+            ret_both_vals += [curr_val, curr_val + w]
+            curr_val = curr_val + w + add_gap
+            i += 2
+
+        return ret_cords, ret_both_vals
+
+    def __update_ax_bars_2(self, ax, category, labels, to_show_signs: bool = False, y_title: str = '', fmt: str = '%.3f'):
+        cols = []
+        try:
+            for dict_col in self.list_dict_ans:
+                time = dict_col[1]
+                dict_col = dict_col[0]
+                cols += [dict_col[name] for name in labels]
+        except:
+            return
+
+        start_end_list, width, y_values = self.get_times_and_intervals(cols, str_value=category)
+        width = np.array(width) + 4
+
+        total_timing = []
+        for s_e in start_end_list:
+            total_timing += [s_e[0], s_e[1]]
+
+        indexes_lead_bar, total_new_modified = self.set_coordinates_for_visable(width, total_timing)
+        indexes_lead_bar = np.array(indexes_lead_bar) + np.array(width) / 2
+
+        ax.clear()
+
+        #mul_arr = np.array([a*4 for a in x])
+        bars_list = []
+        i = 0
+        for (dict_col, time_col) in self.list_dict_ans:
+            bars_list += [ax.bar([indexes_lead_bar[i]], [y_values[i]], width=width, label=self.sub_str_find(time_col))]
+            i += 1
+
+        ax.set_ylabel('time in seconds')
+        ax.set_title(y_title + '\n' + labels[0])
+        ax.set_xticks(total_new_modified, ["%.3f" % t for t in total_timing], rotation=-15, size=8)
+        if to_show_signs:
+            # ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+            ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+        for rects in bars_list:
+            ax.bar_label(rects, padding=3, size=8, fmt=fmt)
 
 
 
