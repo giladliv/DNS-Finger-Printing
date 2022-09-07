@@ -162,11 +162,16 @@ def main(DNS_address, list_names, repeats: int = 8, col_per_page:int = 2, is_fir
 
 if __name__ == "__main__":
     try:
-        DNS_address = '94.153.241.134'  # '88.80.64.8' # <--- GOODONE #'62.219.128.128'
+        # 94.153.241.134 - intresting
+        # 88.80.64.8 - good dns for check
+        DNS_address = '88.80.64.8'  # '88.80.64.8' # <--- GOODONE #'62.219.128.128'
         list_names = ['wikipedia.org', 'china.org.cn', 'fdgdhghfhfghfjfdhdh.com', 'cnbc.com', 'lexico.com',
                       'tr-ex.me', 'tvtropes.org', 'tandfonline.com', 'amazon.in', 'archive.org', 'amitdvir.com',
                       'nihonsport.com', 'aeon-ryukyu.jp', '4stringsjp.com']
-        main(DNS_address, list_names, repeats=8, col_per_page=2, is_first_rec=True)
+        with open('list_of_domain_names.txt', 'w') as f:
+            f.write('\n'.join(list_names))
+
+        #main(DNS_address, list_names, repeats=8, col_per_page=2, is_first_rec=True)
         # main(False, False)
     except KeyboardInterrupt:
         print('Interrupted')

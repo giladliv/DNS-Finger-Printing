@@ -51,6 +51,5 @@ def sub_date(t: str, sep : str = ', '):
         return ''
 
 print(sub_date("sdfsd , sds", sep=', '))
-
 with open('me.txt', 'r') as f:
     print(*f.readlines(), sep='\n')
