@@ -47,20 +47,18 @@ class DNS_FP_runner:
 
     # primary data of dns requests
 
-    def send_DNS_request(self, dns_server: str, name: str, src_port: int, bar, is_recusive: bool = False, sec_timeout: int = MAX_WAIT):
+    def send_DNS_request(self, dns_server: str, name_domain: str, src_port: int, bar, is_recusive: bool = False, sec_timeout: int = MAX_WAIT):
         rd_flag = 1 if (is_recusive == True) else 0
         answer = None
         i = 0
         dns_req = IP()
-        time_recv = 0
+
         while answer is None and i < 4:
-            dns_req = IP(dst=dns_server) / UDP(sport=src_port, dport=53) / DNS(rd=rd_flag, qd=DNSQR(qname=name))#, qtype='A'))
+            dns_req = IP(dst=dns_server) / UDP(sport=src_port, dport=53) / DNS(rd=rd_flag, qd=DNSQR(qname=name_domain))#, qtype='A'))
             answer = sr1(dns_req, verbose=0, timeout=sec_timeout)
             src_port = random.randint(49152, 65535)
-            # with self.mutex:
 
-
-        self.dns_dict[name] = {'pkt_recv': answer, 'pkt_sent': dns_req}
+        self.dns_dict[name_domain] = {'pkt_recv': answer, 'pkt_sent': dns_req}
         bar()
 
     def get_data_from_pkts(self, pkt_dict : dict):
@@ -72,11 +70,9 @@ class DNS_FP_runner:
 
         answer = pkt_dict['pkt_recv']
         dns_req = pkt_dict['pkt_sent']
-        sent_time = pkt_dict['pkt_sent'].sent_time
+        sent_time = dns_req.sent_time
         recv_time = sent_time + MAX_WAIT if answer is None else answer.time
         if answer is not None:
-            # self.dns_dict[name].show()
-
             dns_addr = str(answer[DNS].summary()).replace('DNS Ans ', '').replace('"', '').replace(' ', '')
             dns_addr = dns_addr if len(dns_addr) > 0 else '--'
             dns_time = answer.time - dns_req.sent_time #end - start
@@ -99,6 +95,7 @@ class DNS_FP_runner:
         return dict_names_ports
 
     def run_names_with_dns(self, is_recusive: bool = False, title: str = ''):
+        self.dns_dict = {}
         return self.__run_names_with_dns(self.DNS_address, self.list_names, is_recusive, title)
 
     def __run_names_with_dns(self, dns_main_ip, names, is_recusive: bool = False, title: str = ''):
@@ -171,7 +168,7 @@ def get_app_by_time(DNS_address, list_names, col_per_page = 1):
     dns_fp_run = DNS_FP_runner(DNS_address, list_names)
 
     list_ans_vals = []
-    list_times = [*dns_fp_run.json_dict_total[DNS_address]][-7:]
+    list_times = [*dns_fp_run.json_dict_total[DNS_address]][-8*3:]
     for time_str in list_times:
         list_ans_vals += [dns_fp_run.get_dict_times_of_dns(DNS_address, time_str)]
 
@@ -188,7 +185,7 @@ if __name__ == "__main__":
     try:
         # 94.153.241.134 - intresting
         # 88.80.64.8 - good dns for check
-        DNS_address = '88.80.64.8'  # '88.80.64.8' # <--- GOODONE #'62.219.128.128'
+        DNS_address = '94.153.241.134'  # '88.80.64.8' # <--- GOODONE #'62.219.128.128'
         list_domain_names = ['wikipedia.org', 'china.org.cn', 'fdgdhghfhfghfjfdhdh.com', 'cnbc.com', 'lexico.com',
                       'tr-ex.me', 'tvtropes.org', 'tandfonline.com', 'amazon.in', 'archive.org', 'amitdvir.com',
                       'nihonsport.com', 'aeon-ryukyu.jp', '4stringsjp.com']
@@ -196,10 +193,10 @@ if __name__ == "__main__":
         # with open('list_of_domain_names.txt', 'w') as f:
         #     f.write('\n'.join(list_names))
 
-        main(DNS_address, list_domain_names, repeats=4, is_first_rec=True)
+        #main(DNS_address, list_domain_names, repeats=8, interval_wait_sec=15, is_first_rec=True)
 
 
-        #get_app_by_time(DNS_address, list_domain_names, col_per_page=2)
+        get_app_by_time(DNS_address, list_domain_names)
     except KeyboardInterrupt:
         print('Interrupted')
         try:
