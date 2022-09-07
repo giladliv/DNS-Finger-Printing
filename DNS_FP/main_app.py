@@ -1,4 +1,6 @@
 import tkinter as tk
+from tkinter.font import Font
+
 import matplotlib.pyplot as plt
 
 from matplotlib.backends.backend_tkagg import (
@@ -24,6 +26,8 @@ class pic_of_plot:
 
         self.fig, (self.ax_time, self.ax_ttl) = plt.subplots(1, 2, figsize=(9, 6))
         self.WIDTH = 0.7
+        self.ax_time_title = f'Time answering DNS request from server {self.DNS_address}'
+        self.ax_ttl_title = f'TTL of DNS request from server {self.DNS_address}'
 
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.root)  # A tk.DrawingArea.
         self.canvas.draw()
@@ -35,30 +39,24 @@ class pic_of_plot:
         self.create_frame_1()
 
         self.__update_plot_of_bars(0)
-        # self.canvas.mpl_connect("key_press_event", self.on_key_press)
-        # button = tk.Button(master=self.root, text="Quit", command=self._quit)
-        # button.pack(side=tk.BOTTOM)
-        # button2 = tk.Button(master=self.root, text="Change", command=self.change_plot)
-        # button2.pack(side=tk.BOTTOM)
-
-        # button2['state'] = 'disabled' # must be active, disabled, or normal
-        # button.pack_forget()
-        # button.pack()
-        # button2.pack()
         self.root.protocol("WM_DELETE_WINDOW", self._quit)
 
     def create_frame_1(self):
-
         self.frame_button = tk.Frame(master=self.root)
+        font_size = Font(size=12)
+
         self.label_pages = tk.Label(master=self.frame_button, text="--")
+        self.label_pages['font'] = font_size
         self.label_pages.pack(side=tk.BOTTOM)
-        # self.chat_name = tk.Label(master=self.frame_2, text='\nChat With: {0} \n'.format(self.curr_name))
-        # self.chat_name.pack(side=tk.LEFT)
+
         self.button_next = tk.Button(master=self.frame_button, text="next", command=self.__click_next)
+        self.button_next['font'] = font_size
         self.button_next.pack(side=tk.RIGHT)
+
         tk.Label(master=self.frame_button, text="  ").pack(side=tk.RIGHT)
         self.button_prev = tk.Button(master=self.frame_button, text="prev", command=self.__click_prev)
         self.button_prev.pack(side=tk.RIGHT)
+        self.button_prev['font'] = font_size
 
         self.frame_button.pack(side=tk.BOTTOM)
 
@@ -93,8 +91,10 @@ class pic_of_plot:
 
     def __update_plot_of_bars(self, ind: int):
         if self.__change_index_plot(ind):
-            self.__update_ax(self.ax_time, 'time', self.subgroups_names[self.ind_plot], to_show_signs=False)
-            self.__update_ax(self.ax_ttl, 'time', self.subgroups_names[self.ind_plot], to_show_signs=True)
+            self.__update_ax(self.ax_time, 'time', self.subgroups_names[self.ind_plot],
+                             y_title=self.ax_time_title, fmt='%.4f', to_show_signs=False)
+            self.__update_ax(self.ax_ttl, 'ttl', self.subgroups_names[self.ind_plot],
+                             y_title=self.ax_ttl_title, fmt='%d', to_show_signs=True)
             self.canvas.draw()
             self.label_pages['text'] = '%d / %d' % (ind + 1, len(self.subgroups_names))
             # self.fig.legend(loc=7)
@@ -112,7 +112,7 @@ class pic_of_plot:
         except:
             return ''
 
-    def __update_ax(self, ax, category, labels, to_show_signs: bool = False):
+    def __update_ax(self, ax, category, labels, to_show_signs: bool = False, y_title: str = '', fmt: str = '%.3f'):
         cols = []
         try:
             for dict_col in self.list_dict_ans:
@@ -134,14 +134,14 @@ class pic_of_plot:
 
         # Add some text for labels, title and custom x-axis tick labels, etc.
         ax.set_ylabel('time in seconds')
-        ax.set_title(f'the receiving adresses from the DNS server {self.DNS_address}')
+        ax.set_title(y_title)
         ax.set_xticks(x + self.WIDTH * (len(self.list_dict_ans) - 1) / 2, labels, rotation=-15)
         if to_show_signs:
             #ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
             ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
         for rects in bars_list:
-            ax.bar_label(rects, padding=3, size=8, fmt='%.4f')
+            ax.bar_label(rects, padding=3, size=8, fmt=fmt)
 
 
     @staticmethod
