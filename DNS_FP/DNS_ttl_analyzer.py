@@ -24,12 +24,15 @@ class DNS_ttl_analyzer:
         return domain_ttl_data, ttl_max
 
     def servers_amount_by_domain_name(self, dns_ip: str, domain_name: str):
-        d_time_ttl, ttl_max = analyzer.get_time_and_ttl(dns_ip, domain_name)
+        d_time_ttl, ttl_max = self.get_time_and_ttl(dns_ip, domain_name)
         potential_servers_act = []
         for time_curr in d_time_ttl:
             ttl_curr = d_time_ttl[time_curr]
             # if ttl_curr == 0:
             #     continue
+            if ttl_curr == 0:
+                continue
+
             i = 0
             while i < len(potential_servers_act):
                 (time_sus, ttl_sus) = potential_servers_act[i]
@@ -57,18 +60,5 @@ class DNS_ttl_analyzer:
         return True
 
     def run_all_domains(self, dns_ip, list_domain_names):
-        sumry_anomaly = [analyzer.servers_amount_by_domain_name(dns_ip, name) for name in list_domain_names]
+        sumry_anomaly = [self.servers_amount_by_domain_name(dns_ip, name) for name in list_domain_names]
         return round(mean(sumry_anomaly))
-
-
-
-
-analyzer = DNS_ttl_analyzer()
-# amount = analyzer.servers_amount_by_domain_name('88.80.64.8', 'cnbc.com')
-# print(amount)
-
-list_names = ['wikipedia.org', 'china.org.cn', 'fdgdhghfhfghfjfdhdh.com', 'cnbc.com', 'lexico.com',
-                      'tr-ex.me', 'tvtropes.org', 'tandfonline.com', 'amazon.in', 'archive.org', 'amitdvir.com',
-                      'nihonsport.com', 'aeon-ryukyu.jp', '4stringsjp.com']
-
-print(analyzer.run_all_domains('94.153.241.134', list_names))

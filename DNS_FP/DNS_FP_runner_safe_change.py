@@ -5,7 +5,7 @@ import atexit
 
 from scapy.layers.dns import DNSRR
 
-from main_app import pic_of_plot
+from cache_graph_gui import pic_of_plot
 
 # logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 

@@ -4,8 +4,7 @@ import atexit
 # https://publicdnsserver.com/
 
 from scapy.layers.dns import DNSRR
-
-from main_app import pic_of_plot
+from cache_graph_gui import pic_of_plot
 
 # logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
@@ -20,18 +19,33 @@ INTERVAL_WAIT_SEC = 10
 
 class DNS_FP_runner:
     def __init__(self, DNS_address, list_names, json_file_name: str = JSON_FILE_NAME_DEFAULT):
-        self.FREE_PORTS = range(1024, 65535) #(1024, 65536)
-        #self.mutex = Lock()
+        if not self.is_ipv4(DNS_address):
+            raise ValueError(f'the given string: {DNS_address} is not an ipv4 format')
+        self.DNS_address = DNS_address
         self.JSON_FILE = json_file_name if json_file_name.endswith('.json') else JSON_FILE_NAME_DEFAULT
         self.json_dict_total = {}
         self.dns_dict = {}
-        self.DNS_address = DNS_address
+
         self.list_names = list_names
         self.reset_rd_illegal_count()
         self.dns_db = dns_data_db(self.JSON_FILE)
+        self.FREE_PORTS = range(1024, 65535)
 
     def save_db(self):
         self.dns_db.save_and_update_db()
+
+    @staticmethod
+    def is_ipv4(ip_addr: str):
+        list_nums = ip_addr.split(".")
+        if len(list_nums) != 4:
+            return False
+        try:
+            for i in list_nums:
+                if int(i) < 0 or int(i) > 255:
+                    return False
+        except:
+            return False
+        return True
 
     def reset_rd_illegal_count(self):
         self.rd_counter = 0
@@ -102,35 +116,6 @@ def wait_bar(interval_wait_sec: int = INTERVAL_WAIT_SEC):
             time.sleep(1)
             bar()
 
-def main(DNS_address, list_names, repeats: int = 8, col_per_page:int = 1, interval_wait_sec: int = INTERVAL_WAIT_SEC,
-         is_first_rec: bool = True, to_show_results: bool = True):
-
-    session_label = datetime.now().strftime(FORMAT_TIME)
-    dns_fp_run = DNS_FP_runner(DNS_address, list_names)
-
-    list_ans_vals = []
-    for i in range(repeats):
-        is_rec = (i == 0) and is_first_rec
-        str_title = f'round %d out ouf %d' % (i + 1, repeats)
-        list_ans_vals += [dns_fp_run.run_names_with_dns(is_recusive=is_rec, title=str_title, label_session=session_label)]
-
-        if i == repeats - 1:
-            continue
-
-        wait_bar(interval_wait_sec)
-
-    # dict_1, time_1 = dns_fp_run.get_dict_times_of_dns(DNS_address, '09/04/2022, 16:49:10')
-    # dict_2, time_2 = dns_fp_run.get_dict_times_of_dns(DNS_address, '09/04/2022, 16:50:13')
-    dns_fp_run.save_db()
-
-    #print(print_list)
-    print()
-    ans_rec = 'IS' if dns_fp_run.is_recursive_DNS() else 'is NOT'
-    print(f'the DNS server {DNS_address} : {ans_rec} an auto-recoesive dns')
-    if to_show_results:
-        app = pic_of_plot(DNS_address, list_names, list_ans_vals, cols_in_plot=col_per_page)
-        app.runner()
-
 
 def get_app_by_time(DNS_address, list_names, col_per_page = 1):
 
@@ -147,35 +132,3 @@ def get_app_by_time(DNS_address, list_names, col_per_page = 1):
     app = pic_of_plot(DNS_address, list_names, list_ans_vals, cols_in_plot=col_per_page)
     app.runner()
 
-    # fig.tight_layout()
-    #
-    # plt.show()
-
-#python DNS_FP_runner.py
-
-if __name__ == "__main__":
-    try:
-        # 94.153.241.134 - intresting
-        # 88.80.64.8 - good dns for check
-        DNS_address = '88.80.64.8'  # '88.80.64.8' # <--- GOODONE #'62.219.128.128'
-        list_domain_names = ['wikipedia.org', 'china.org.cn', 'fdgdhghfhfghfjfdhdh.com', 'cnbc.com', 'lexico.com',
-                      'tr-ex.me', 'tvtropes.org', 'tandfonline.com', 'amazon.in', 'archive.org', 'amitdvir.com',
-                      'nihonsport.com', 'aeon-ryukyu.jp', '4stringsjp.com']
-
-        # with open('list_of_domain_names.txt', 'w') as f:
-        #     f.write('\n'.join(list_names))
-        # main(DNS_address, list_domain_names, repeats=4, interval_wait_sec=10, is_first_rec=True, to_show_results=False)
-        main(DNS_address, list_domain_names, repeats=6, interval_wait_sec=10, is_first_rec=True, to_show_results=True)
-        # laps = 5
-        # for i in range(laps):
-        #     main(DNS_address, list_domain_names, repeats=6, interval_wait_sec=10, is_first_rec=True, to_show_results=False)
-        #     if i < laps - 1:
-        #         wait_bar(10)
-
-        #get_app_by_time(DNS_address, list_domain_names)
-    except KeyboardInterrupt:
-        print('Interrupted')
-        try:
-            sys.exit(0)
-        except SystemExit:
-            os._exit(0)
