@@ -1,18 +1,13 @@
 from statistics import mean
 
 from DNS_FP_runner import *
+from dns_data_db import dns_data_db
 
 class DNS_ttl_analyzer:
     def __init__(self, json_file_name: str = JSON_FILE_NAME_DEFAULT):
         self.JSON_FILE = json_file_name if json_file_name.endswith('.json') else JSON_FILE_NAME_DEFAULT
-        self.load_from_json(self.JSON_FILE)
-
-    def load_from_json(self, name_json: str):
-        if not os.path.exists(name_json):
-            with open(name_json, 'w') as f:
-                f.write(json.dumps({}))
-        with open(name_json, 'r') as f:
-            self.__json_dict = json.loads(f.read())
+        self.dns_data = dns_data_db(self.JSON_FILE)
+        self.__json_dict = self.dns_data.get_all_results_dict()
 
     def get_time_and_ttl(self, dns_ip: str, domain_name: str):
         domain_ttl_data = {}

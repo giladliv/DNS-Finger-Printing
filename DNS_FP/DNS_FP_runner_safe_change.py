@@ -28,25 +28,10 @@ class DNS_FP_runner:
         self.DNS_address = DNS_address
         self.list_names = list_names
         self.reset_rd_illegal_count()
-        self.load_from_json(self.JSON_FILE)
+        self.dns_db = dns_data_db(self.JSON_FILE)
 
-        # before deleted - we first save the data to the json
-        atexit.register(self.save_to_json, self.JSON_FILE)
-
-
-    # def __del__(self):
-    #     self.save_to_json(self.JSON_FILE)
-
-    def load_from_json(self, name_json: str):
-        if not os.path.exists(name_json):
-            with open(name_json, 'w') as f:
-                f.write(json.dumps({}))
-        with open(name_json, 'r') as f:
-            self.json_dict_total = json.loads(f.read())
-
-    def save_to_json(self, name_json: str = JSON_FILE_NAME_DEFAULT):
-        with open(name_json, 'w') as f:
-            f.write(json.dumps(self.json_dict_total))
+    def save_db(self):
+        self.dns_db.save_and_update_db()
 
     def reset_rd_illegal_count(self):
         self.rd_counter = 0
@@ -80,30 +65,6 @@ class DNS_FP_runner:
 
         self.dns_dict[name_domain] = {'pkt_recv': answer, 'pkt_sent': dns_req}
 
-    def get_data_from_pkts(self, pkt_dict : dict):
-        dns_addr = 'No answer received...'
-        dns_ttl = 0
-        dns_time = MAX_WAIT
-        if 'pkt_recv' not in pkt_dict or 'pkt_sent' not in pkt_dict:
-                return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl, 'sent_time': 0, 'recv_time': 0}
-
-        answer = pkt_dict['pkt_recv']
-        dns_req = pkt_dict['pkt_sent']
-        sent_time = dns_req.sent_time
-        recv_time = sent_time + MAX_WAIT if answer is None else answer.time
-        if answer is not None:
-            dns_addr = str(answer[DNS].summary()).replace('DNS Ans ', '').replace('"', '').replace(' ', '')
-            dns_addr = dns_addr if len(dns_addr) > 0 else '--'
-            dns_time = answer.time - dns_req.sent_time #end - start
-            dns_ttl = 0
-            RR_ans = answer[DNS].ancount
-            if RR_ans > 0:  # if requests came
-                for i in range(RR_ans):
-                    dns_ttl += answer[DNSRR][i].ttl
-                dns_ttl = round(dns_ttl / RR_ans) # get average
-
-            return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl, 'sent_time': sent_time, 'recv_time': recv_time}
-
     def gen_port_names(self, add_names):
         ports = sample(self.FREE_PORTS, len(add_names))
         dict_names_ports = {}
@@ -113,31 +74,20 @@ class DNS_FP_runner:
             i += 1
         return dict_names_ports
 
-    def run_names_with_dns(self, is_recusive: bool = False, title: str = ''):
+    def run_names_with_dns(self, is_recusive: bool = False, title: str = '', label_session: str = ''):
         return self.__run_names_with_dns(self.DNS_address, self.list_names, is_recusive, title)
 
-    def __run_names_with_dns(self, dns_main_ip, names, is_recusive: bool = False, title: str = ''):
+    def __run_names_with_dns(self, dns_main_ip, names, is_recusive: bool = False, title: str = '', label_session: str = ''):
         dict_names_ports = self.gen_port_names(names)
-        now = datetime.now()  # current date and time
-        curr_time = now.strftime("%m/%d/%Y, %H:%M:%S")
-        self.dns_dict = {}
 
+        self.dns_dict = {}
+        time_sample = datetime.now()  # current date and time
         with alive_bar(len(names), title=title, theme='classic') as bar:  ## for something nice
             for name in dict_names_ports:
                 port = dict_names_ports[name]
                 self.send_DNS_request(dns_main_ip, name, port, bar, is_recusive=is_recusive)
 
-        dict_addr_final = {}
-        time.sleep(1)
-        for name in self.dns_dict:
-            dict_addr_final[name] = self.get_data_from_pkts(self.dns_dict[name])
-
-        # self.load_from_json(self.JSON_FILE)
-        if dns_main_ip not in self.json_dict_total:
-            self.json_dict_total[dns_main_ip] = {}
-        self.json_dict_total[dns_main_ip].update({curr_time: dict_addr_final})
-        # self.save_to_json(self.JSON_FILE)
-        return dict_addr_final, curr_time
+        return self.dns_db.add_data_to_db(dns_main_ip, time_sample, self.dns_dict, label_session)
 
     def get_dict_times_of_dns(self, dns_ip: str, time_str: str):
         try:
@@ -145,11 +95,6 @@ class DNS_FP_runner:
         except:
             return None, None
 
-    def reset_rd_illegal_count(self):
-        self.rd_counter = 0
-        self.pkt_counter = 0
-
-#python DNS_FP_runner.py
 def wait_bar(interval_wait_sec: int = INTERVAL_WAIT_SEC):
     sec_time = interval_wait_sec if (interval_wait_sec > 0) else INTERVAL_WAIT_SEC
     with alive_bar(sec_time, title=f'Wait now {sec_time} seconds', theme='classic') as bar:
@@ -160,15 +105,14 @@ def wait_bar(interval_wait_sec: int = INTERVAL_WAIT_SEC):
 def main(DNS_address, list_names, repeats: int = 8, col_per_page:int = 1, interval_wait_sec: int = INTERVAL_WAIT_SEC,
          is_first_rec: bool = True, to_show_results: bool = True):
 
-    #list_names = ['xinshipu.com']
-
+    session_label = datetime.now().strftime(FORMAT_TIME)
     dns_fp_run = DNS_FP_runner(DNS_address, list_names)
 
     list_ans_vals = []
     for i in range(repeats):
         is_rec = (i == 0) and is_first_rec
         str_title = f'round %d out ouf %d' % (i + 1, repeats)
-        list_ans_vals += [dns_fp_run.run_names_with_dns(is_recusive=is_rec, title=str_title)]
+        list_ans_vals += [dns_fp_run.run_names_with_dns(is_recusive=is_rec, title=str_title, label_session=session_label)]
 
         if i == repeats - 1:
             continue
@@ -177,7 +121,7 @@ def main(DNS_address, list_names, repeats: int = 8, col_per_page:int = 1, interv
 
     # dict_1, time_1 = dns_fp_run.get_dict_times_of_dns(DNS_address, '09/04/2022, 16:49:10')
     # dict_2, time_2 = dns_fp_run.get_dict_times_of_dns(DNS_address, '09/04/2022, 16:50:13')
-    dns_fp_run.save_to_json()
+    dns_fp_run.save_db()
 
     #print(print_list)
     print()
@@ -221,7 +165,7 @@ if __name__ == "__main__":
         # with open('list_of_domain_names.txt', 'w') as f:
         #     f.write('\n'.join(list_names))
         # main(DNS_address, list_domain_names, repeats=4, interval_wait_sec=10, is_first_rec=True, to_show_results=False)
-        main(DNS_address, list_domain_names, repeats=6, interval_wait_sec=10, is_first_rec=True, to_show_results=False)
+        main(DNS_address, list_domain_names, repeats=6, interval_wait_sec=10, is_first_rec=True, to_show_results=True)
         # laps = 5
         # for i in range(laps):
         #     main(DNS_address, list_domain_names, repeats=6, interval_wait_sec=10, is_first_rec=True, to_show_results=False)

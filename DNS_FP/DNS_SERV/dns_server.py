@@ -59,14 +59,14 @@ INTERVAL_WAIT_SEC = 5
 #
 # wait_bar()
 
-a = {'a': 1}
-b = a.copy()
-a['a'] = 2
-
-print(a)
-print(b)
+# a = {'a': 1}
+# b = a.copy()
+# a['a'] = 2
+#
+# print(a)
+# print(b)
 # src_port = random.randint(49152, 65535)
-# dns_req = IP(dst='88.80.64.8') / UDP(sport=src_port, dport=53) / DNS(rd=0, qd=DNSQR(qname='lexico.com'))#, qtype='A'))
+# dns_req = IP(dst='88.80.64.8') / UDP(sport=src_port, dport=53) / DNS(rd=1, qd=DNSQR(qname='lexico.com'))#, qtype='A'))
 # answer = sr1(dns_req, timeout=5)
 # answer.show()
 # print('rd flag is:', answer[DNS].rd)
@@ -75,8 +75,9 @@ print(b)
 # print(answer.haslayer(IP))
 # from time import gmtime, strftime, localtime
 #
-# print('ttl is:', answer[DNS].ttl)
+# print(answer[DNS].summary())
 # print('got ', answer[DNS].ancount, 'answers')
+#
 # print('answer time:', answer.time)
 # print(strftime("%a, %d %b %Y %H:%M:%S +0000", localtime(answer.time)),'\n')
 # print('pkt time:', dns_req.sent_time)
@@ -84,7 +85,7 @@ print(b)
 # print()
 #
 # for x in range(answer[DNS].ancount):
-#     print(answer[DNSRR][x].ttl)
+#     print(f'ttl for {x}:', answer[DNSRR][x].ttl)
 #
 # def sub_date(t: str, sep : str = ', '):
 #     try:
@@ -96,7 +97,7 @@ print(b)
 # with open('me.txt', 'r') as f:
 #     print(*f.readlines(), sep='\n')
 
-with open('../dns_data_01.json', 'r') as f:
+with open('../dns_data.json', 'r') as f:
     dict_from_json = json.loads(f.read())
 
 new_dict = {}
@@ -116,5 +117,5 @@ for dns_ip in dict_from_json:
     i += 1
 
 
-with open('../dns_data_01_new_dawn.json', 'w') as f:
+with open('../dns_data.json', 'w') as f:
     f.write(json.dumps({'results': new_dict, 'sessions': dict_labels}))

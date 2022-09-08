@@ -21,6 +21,7 @@ class dns_data_db:
         self.tests_sessions = {}
 
         self.__load_from_json(JSON_FILE_NAME_DEFAULT)
+        # before deleted - we first save the data to the json
         atexit.register(self.save_and_update_db)
 
     def __load_from_json(self, name_json: str):
@@ -32,13 +33,16 @@ class dns_data_db:
             self.json_dict_total = dict_from_json[RESULTS] if RESULTS in dict_from_json else {}
             self.tests_sessions = dict_from_json[SESSIONS] if SESSIONS in dict_from_json else {}
 
+    def get_all_results_dict(self):
+        return self.json_dict_total.copy()
+
     def save_and_update_db(self):
         with open(self.JSON_FILE, 'w') as f:
             f.write(json.dumps({RESULTS: self.json_dict_total, SESSIONS: self.tests_sessions}))
 
     def add_data_to_db(self, dns_ip: str, time_when_taken: datetime, sample_dict_data: dict, label_session: str):
         dict_addr_final = {}
-        time_str = time_when_taken.strftime("%m/%d/%Y, %H:%M:%S")
+        time_str = time_when_taken.strftime(FORMAT_TIME)
 
         for name in sample_dict_data:
             dict_addr_final[name] = self.get_data_from_pkts(sample_dict_data[name])
