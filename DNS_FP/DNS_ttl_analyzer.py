@@ -1,3 +1,5 @@
+from statistics import mean
+
 from DNS_FP_runner import *
 
 class DNS_ttl_analyzer:
@@ -16,43 +18,62 @@ class DNS_ttl_analyzer:
         domain_ttl_data = {}
         ttl_max = float('-inf')
         for date in self.__json_dict[dns_ip]:
-            d_specific_ttl = self.__json_dict[dns_ip][date][domain_name]
-            if 'ttl' not in d_specific_ttl or 'recv_time' not in d_specific_ttl:
+            try:
+                d_specific_ttl = self.__json_dict[dns_ip][date][domain_name]
+                ttl = d_specific_ttl['ttl']
+                recv_time = d_specific_ttl['recv_time']
+                domain_ttl_data[recv_time] = ttl
+                ttl_max = max(ttl, ttl_max)
+            except:
                 continue
-            ttl = d_specific_ttl['ttl']
-            recv_time = d_specific_ttl['recv_time']
-            domain_ttl_data[recv_time] = ttl
-            ttl_max = max(ttl, ttl_max)
         return domain_ttl_data, ttl_max
 
-    def check_ttl_dict(self, d_time_ttl: dict, ttl_max):
-        time_list = list(d_time_ttl.keys())
-        res = list(zip(time_list, time_list[1:] + time_list[:1]))
-        del res[-1]
-        for (time_1, time_2) in res:
-            ttl_1 = d_time_ttl[time_1]
-            ttl_2 = d_time_ttl[time_2]
-            time_diff = time_2 - time_1
-            if ttl_1 > ttl_2:
-                ttl_diff = ttl_1 - ttl_2
-                if abs(time_diff - ttl_diff) >= 1:
-                    time_diff = round(time_diff)
-                    print(f'time 1: {time_1},\tttl1: {ttl_1} \t time 2: {time_2},\tttl2: {ttl_2}')
-                    print(f'diffs are not as the same: {time_diff} != {ttl_diff}\n')
-            else:
-                # time difference must be grater than the left ttl
-                # or the next ttl is less than the max
-                if time_diff - ttl_1 <= -1 or ttl_max > ttl_2:
-                    time_diff = round(time_diff)
-                    print(f'****** time 1: {time_1},\tttl1: {ttl_1} \t time 2: {time_2},\tttl2: {ttl_2}')
-                    print(f'****** time hasn\'t pass the TTL counting: {time_diff} << {ttl_1}\n')
+    def servers_amount_by_domain_name(self, dns_ip: str, domain_name: str):
+        d_time_ttl, ttl_max = analyzer.get_time_and_ttl(dns_ip, domain_name)
+        potential_servers_act = []
+        for time_curr in d_time_ttl:
+            ttl_curr = d_time_ttl[time_curr]
+            # if ttl_curr == 0:
+            #     continue
+            i = 0
+            while i < len(potential_servers_act):
+                (time_sus, ttl_sus) = potential_servers_act[i]
+                if self.check_if_difference_valid(time_sus, ttl_sus, time_curr, ttl_curr, ttl_max):
+                    potential_servers_act[i] = (time_curr, ttl_curr)
+                    break
+                i += 1
+            if i == len(potential_servers_act):
+                potential_servers_act += [(time_curr, ttl_curr)]
+        return len(potential_servers_act)
 
-    #def check_if_difference_valid(self, time_1, ttl_1, time_2, ttl_2):
+
+
+    def check_if_difference_valid(self, time_1, ttl_1, time_2, ttl_2, ttl_max):
+        time_diff = time_2 - time_1
+        if ttl_1 > ttl_2:
+            ttl_diff = ttl_1 - ttl_2
+            if abs(time_diff - ttl_diff) > 1:
+                return False
+        else:
+            # time difference must be grater than the left ttl
+            # or the next ttl is less than the max
+            if time_diff - ttl_1 < -1 or ttl_max > ttl_2:
+                return False
+        return True
+
+    def run_all_domains(self, dns_ip, list_domain_names):
+        sumry_anomaly = [analyzer.servers_amount_by_domain_name(dns_ip, name) for name in list_domain_names]
+        return round(mean(sumry_anomaly))
+
 
 
 
 analyzer = DNS_ttl_analyzer()
-d_time_ttl, ttl_max = analyzer.get_time_and_ttl('94.153.241.134', 'amitdvir.com')
-print(d_time_ttl)
+# amount = analyzer.servers_amount_by_domain_name('88.80.64.8', 'cnbc.com')
+# print(amount)
 
-analyzer.check_ttl_dict(d_time_ttl)
+list_names = ['wikipedia.org', 'china.org.cn', 'fdgdhghfhfghfjfdhdh.com', 'cnbc.com', 'lexico.com',
+                      'tr-ex.me', 'tvtropes.org', 'tandfonline.com', 'amazon.in', 'archive.org', 'amitdvir.com',
+                      'nihonsport.com', 'aeon-ryukyu.jp', '4stringsjp.com']
+
+print(analyzer.run_all_domains('94.153.241.134', list_names))

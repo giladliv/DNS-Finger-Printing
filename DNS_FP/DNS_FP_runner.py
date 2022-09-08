@@ -1,5 +1,6 @@
 import logging
 import atexit
+# https://blog.apnic.net/2021/06/22/cache-me-outside-dns-cache-probing/
 
 from scapy.layers.dns import DNSRR
 
@@ -26,6 +27,7 @@ class DNS_FP_runner:
         self.dns_dict = {}
         self.DNS_address = DNS_address
         self.list_names = list_names
+        self.reset_rd_illegal_count()
         self.load_from_json(self.JSON_FILE)
 
         atexit.register(self.save_to_json, self.JSON_FILE)
@@ -45,10 +47,19 @@ class DNS_FP_runner:
         with open(name_json, 'w') as f:
             f.write(json.dumps(self.json_dict_total))
 
+    def reset_rd_illegal_count(self):
+        self.rd_counter = 0
+        self.pkt_counter = 0
+
+    def is_recursive_DNS(self):
+        if self.pkt_counter == 0:
+            return 0
+        return (self.rd_counter / self.pkt_counter) > 0.7
+
     # primary data of dns requests
 
     def send_DNS_request(self, dns_server: str, name_domain: str, src_port: int, bar, is_recusive: bool = False, sec_timeout: int = MAX_WAIT):
-        rd_flag = 1 if (is_recusive == True) else 0
+        rd_flag = 1 if is_recusive else 0
         answer = None
         i = 0
         dns_req = IP()
@@ -58,8 +69,14 @@ class DNS_FP_runner:
             answer = sr1(dns_req, verbose=0, timeout=sec_timeout)
             src_port = random.randint(49152, 65535)
 
-        self.dns_dict[name_domain] = {'pkt_recv': answer, 'pkt_sent': dns_req}
         bar()
+
+        if (answer is not None) and (not is_recusive):
+            self.rd_counter += answer[DNS].rd
+            self.pkt_counter += 1
+
+        self.dns_dict[name_domain] = {'pkt_recv': answer, 'pkt_sent': dns_req}
+
 
     def get_data_from_pkts(self, pkt_dict : dict):
         dns_addr = 'No answer received...'
@@ -127,9 +144,19 @@ class DNS_FP_runner:
         except:
             return None, None
 
-#python DNS_FP_runner.py
+    def reset_rd_illegal_count(self):
+        self.rd_counter = 0
+        self.pkt_counter = 0
 
-def main(DNS_address, list_names, repeats: int = 8, col_per_page:int = 1, interval_wait_sec: int = INTERVAL_WAIT_SEC, is_first_rec: bool = True):
+#python DNS_FP_runner.py
+def wait_bar(interval_wait_sec: int = INTERVAL_WAIT_SEC):
+    sec_time = interval_wait_sec if (interval_wait_sec > 0) else INTERVAL_WAIT_SEC
+    with alive_bar(sec_time, title=f'Wait now {sec_time} seconds', theme='classic') as bar:
+        for i in range(sec_time):
+            time.sleep(1)
+            bar()
+
+def main(DNS_address, list_names, repeats: int = 8, col_per_page:int = 1, interval_wait_sec: int = INTERVAL_WAIT_SEC, is_first_rec: bool = True, to_show_results: bool = True):
 
     #list_names = ['xinshipu.com']
 
@@ -144,21 +171,19 @@ def main(DNS_address, list_names, repeats: int = 8, col_per_page:int = 1, interv
         if i == repeats - 1:
             continue
 
-        sec_time = interval_wait_sec if (interval_wait_sec > 0) else INTERVAL_WAIT_SEC
-        with alive_bar(sec_time, title=f'Wait now {sec_time} seconds', theme='classic') as bar:
-            for i in range(sec_time):
-                time.sleep(1)
-                bar()
+        wait_bar(interval_wait_sec)
 
     # dict_1, time_1 = dns_fp_run.get_dict_times_of_dns(DNS_address, '09/04/2022, 16:49:10')
     # dict_2, time_2 = dns_fp_run.get_dict_times_of_dns(DNS_address, '09/04/2022, 16:50:13')
     dns_fp_run.save_to_json()
-    print_list = []
-    for (dict_addr_final, curr_time) in list_ans_vals:
-        print_list += [dict_addr_final['amitdvir.com']]
+
     #print(print_list)
-    app = pic_of_plot(DNS_address, list_names, list_ans_vals, cols_in_plot=col_per_page)
-    app.runner()
+    print()
+    ans_rec = 'IS' if dns_fp_run.is_recursive_DNS() else 'is NOT'
+    print(f'the DNS server {DNS_address} : {ans_rec} an auto-recoesive dns')
+    if to_show_results:
+        app = pic_of_plot(DNS_address, list_names, list_ans_vals, cols_in_plot=col_per_page)
+        app.runner()
 
 
 def get_app_by_time(DNS_address, list_names, col_per_page = 1):
@@ -175,6 +200,7 @@ def get_app_by_time(DNS_address, list_names, col_per_page = 1):
 
     app = pic_of_plot(DNS_address, list_names, list_ans_vals, cols_in_plot=col_per_page)
     app.runner()
+
     # fig.tight_layout()
     #
     # plt.show()
@@ -192,11 +218,14 @@ if __name__ == "__main__":
 
         # with open('list_of_domain_names.txt', 'w') as f:
         #     f.write('\n'.join(list_names))
+        # main(DNS_address, list_domain_names, repeats=4, interval_wait_sec=10, is_first_rec=True, to_show_results=False)
+        laps = 5
+        for i in range(laps):
+            main(DNS_address, list_domain_names, repeats=6, interval_wait_sec=10, is_first_rec=True, to_show_results=False)
+            if i < laps - 1:
+                wait_bar(10)
 
-        #main(DNS_address, list_domain_names, repeats=8, interval_wait_sec=15, is_first_rec=True)
-
-
-        get_app_by_time(DNS_address, list_domain_names)
+        #get_app_by_time(DNS_address, list_domain_names)
     except KeyboardInterrupt:
         print('Interrupted')
         try:

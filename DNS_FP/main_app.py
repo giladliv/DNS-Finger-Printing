@@ -12,7 +12,7 @@ import numpy as np
 class pic_of_plot:
     def __init__(self, DNS_address, list_names, list_dict_ans, cols_in_plot=3):
         self.root = tk.Tk()
-        self.root.wm_title("Embedding in Tk")
+        self.root.wm_title(f"DNS Cache Probing - {DNS_address}")
         #self.root.state('zoomed')
         self.list_dict_ans = list_dict_ans
         self.DNS_address = DNS_address
