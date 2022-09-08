@@ -1,6 +1,7 @@
 import logging
 import atexit
 # https://blog.apnic.net/2021/06/22/cache-me-outside-dns-cache-probing/
+# https://publicdnsserver.com/
 
 from scapy.layers.dns import DNSRR
 
@@ -13,13 +14,14 @@ import time
 from random import sample
 import json
 from alive_progress import alive_bar
+from dns_data_db import *
 
-MAX_WAIT = 5
-JSON_FILE_NAME_DEFAULT = 'dns_data.json'
+
+
 INTERVAL_WAIT_SEC = 10
 
 class DNS_FP_runner:
-    def __init__(self, DNS_address, list_names, json_file_name :str = JSON_FILE_NAME_DEFAULT):
+    def __init__(self, DNS_address, list_names, json_file_name: str = JSON_FILE_NAME_DEFAULT):
         self.FREE_PORTS = range(49152, 65535) #(1024, 65536)
         self.mutex = Lock()
         self.JSON_FILE = json_file_name if json_file_name.endswith('.json') else JSON_FILE_NAME_DEFAULT
@@ -112,7 +114,7 @@ class DNS_FP_runner:
         return dict_names_ports
 
     def run_names_with_dns(self, is_recusive: bool = False, title: str = ''):
-        self.dns_dict = {}
+
         return self.__run_names_with_dns(self.DNS_address, self.list_names, is_recusive, title)
 
     def __run_names_with_dns(self, dns_main_ip, names, is_recusive: bool = False, title: str = ''):
@@ -121,11 +123,12 @@ class DNS_FP_runner:
         # curr_time = str(time.time())
         now = datetime.now()  # current date and time
         curr_time = now.strftime("%m/%d/%Y, %H:%M:%S")
-
+        self.dns_dict = {}
         with alive_bar(len(names), title=title, theme='classic') as bar:  ## for something nice
             for name in dict_names_ports:
                 port = dict_names_ports[name]
                 self.send_DNS_request(dns_main_ip, name, port, bar, is_recusive=is_recusive)
+
         dict_addr_final = {}
         time.sleep(1)
         for name in self.dns_dict:
