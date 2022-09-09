@@ -10,7 +10,10 @@ from matplotlib.backend_bases import key_press_handler
 import numpy as np
 
 class pic_of_plot:
-    def __init__(self, DNS_address, list_names, list_dict_ans, cols_in_plot=3):
+    """
+    class that creates the visual presentation of the queries
+    """
+    def __init__(self, DNS_address, list_names, list_dict_ans, cols_in_plot=1):
         self.root = tk.Tk()
         self.root.wm_title(f"DNS Cache Probing - {DNS_address}")
         #self.root.state('zoomed')

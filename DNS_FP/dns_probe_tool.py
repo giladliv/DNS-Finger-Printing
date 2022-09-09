@@ -12,7 +12,9 @@ def get_domain_name_list(file_name_domains: str):
 def run_session(DNS_address: str, list_names: list, session_name: str = '', repeats: int = 8,
                 interval_wait_sec: int = INTERVAL_WAIT_SEC, is_first_rec: bool = True,
                 to_show_results: bool = True, json_file_name: str = JSON_FILE_NAME_DEFAULT):
-
+    """
+    run session of queries
+    """
     session_name = datetime.now().strftime(FORMAT_TIME) if session_name == '' else session_name
     dns_fp_run = DNS_FP_runner(DNS_address, list_names, json_file_name)
 
@@ -82,9 +84,6 @@ def main():
     parser.add_argument('-fnc', '--first_not_recursive', action='store_true', help='if you wish that the first run won\'t '
                                                                                    'be recurssive activate this flag')
 
-    # def run_dns_cache_gui(ip_dns: str, names_file: str, session_name: str = '', repeats: int = 8,
-    #                       interval_wait_sec: int = INTERVAL_WAIT_SEC, is_first_rec: bool = True,
-    #                       json_file_name: str = JSON_FILE_NAME_DEFAULT):
 
     args = parser.parse_args()
     is_first_rec = not args.first_not_recursive
