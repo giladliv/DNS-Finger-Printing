@@ -81,6 +81,14 @@ class dns_data_db:
         return list_all_data, list(list_exist_names)
 
     def get_data_from_pkts(self, pkt_dict: dict):
+        try:
+            self.__get_data_from_pkts(pkt_dict)
+        except Exception as err:
+            print(err)
+            print('at get_data_from_pkts')
+            raise RuntimeError('get_data_from_pkts error')
+
+    def __get_data_from_pkts(self, pkt_dict: dict):
         dns_addr = 'No answer received...'
         dns_ttl = 0
         dns_time = MAX_WAIT
@@ -96,7 +104,7 @@ class dns_data_db:
             return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl, 'sent_time': 0, 'recv_time': 0}
 
         sent_time = dns_req.sent_time
-        recv_time = sent_time + MAX_WAIT if answer is None else answer.time
+        recv_time = sent_time + MAX_WAIT if (answer is None) else answer.time
         if answer is not None:
             dns_addr = str(answer[DNS].summary()).replace('DNS Ans ', '').replace('"', '').replace(' ', '')
             dns_addr = dns_addr if len(dns_addr) > 0 else '--'
@@ -108,5 +116,5 @@ class dns_data_db:
                     dns_ttl += answer[DNSRR][i].ttl
                 dns_ttl = round(dns_ttl / RR_ans)  # get average
 
-            return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl, 'sent_time': sent_time,
-                    'recv_time': recv_time}
+        return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl, 'sent_time': sent_time,
+                'recv_time': recv_time}

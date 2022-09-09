@@ -61,5 +61,5 @@ python dns_probe_tool.py -ip 94.153.241.134
 
 88.80.64.8 - good dns for check
 ```
-88.80.64.8
+python dns_probe_tool.py -ip 88.80.64.8
 ```
