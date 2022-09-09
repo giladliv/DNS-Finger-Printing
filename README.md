@@ -65,17 +65,3 @@ optional arguments:
   -fnc, --first_not_recursive
                         if you wish that the first run won't be recurssive activate this flag
 ```
-
-
-## good checks
-94.153.241.134 - intresting
-
-```
-python dns_probe_tool.py -ip 94.153.241.134
-```
-
-
-88.80.64.8 - good dns for check
-```
-python dns_probe_tool.py -ip 88.80.64.8
-```
