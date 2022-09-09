@@ -1,7 +1,7 @@
 import argparse
-from DNS_FP_runner import *
-from DNS_ttl_analyzer import *
-from cache_graph_gui import *
+from dns_classes.DNS_FP_runner import *
+from dns_classes.DNS_ttl_analyzer import *
+from dns_classes.cache_graph_gui import *
 
 FILE_NAME_DOMAIN = 'list_of_domain_names.txt'
 
