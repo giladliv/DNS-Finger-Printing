@@ -1,19 +1,11 @@
-import logging
-import atexit
 # https://blog.apnic.net/2021/06/22/cache-me-outside-dns-cache-probing/
 # https://publicdnsserver.com/
 
-from scapy.layers.dns import DNSRR
-from cache_graph_gui import pic_of_plot
-
 # logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
-from scapy.all import *
-import time
 from random import sample
-import json
 from alive_progress import alive_bar
-from dns_data_db import *
+from classes.dns_data_db import *
 
 INTERVAL_WAIT_SEC = 10
 

@@ -1,7 +1,7 @@
 import argparse
-from DNS_FP_runner import *
-from DNS_ttl_analyzer import *
-from cache_graph_gui import *
+from classes.DNS_FP_runner import *
+from classes.DNS_ttl_analyzer import *
+from classes.cache_graph_gui import *
 
 FILE_NAME_DOMAIN = 'list_of_domain_names.txt'
 
@@ -22,7 +22,7 @@ def run_session(DNS_address: str, list_names: list, session_name: str = '', repe
     for i in range(repeats):
         is_rec = (i == 0) and is_first_rec
         str_title = f'round %d out of %d' % (i + 1, repeats)
-        list_ans_vals += [dns_fp_run.run_names_with_dns(is_recusive=is_rec, title=str_title, label_session=session_name)]
+        list_ans_vals += [dns_fp_run.run_names_with_dns(is_recursive=is_rec, title=str_title, label_session=session_name)]
         if i == repeats - 1:
             continue
         wait_bar(interval_wait_sec)

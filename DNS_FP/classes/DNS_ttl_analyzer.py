@@ -1,7 +1,6 @@
 from statistics import mean
 
-from DNS_FP_runner import *
-from dns_data_db import dns_data_db
+from classes.dns_data_db import *
 
 class DNS_ttl_analyzer:
     """
