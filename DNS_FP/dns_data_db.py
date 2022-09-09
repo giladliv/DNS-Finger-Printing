@@ -5,7 +5,7 @@ from scapy.all import *
 from scapy.layers.dns import DNS, DNSRR
 
 MAX_WAIT = 5
-JSON_FILE_NAME_DEFAULT = '../data/dns_data.json'
+JSON_FILE_NAME_DEFAULT = 'data/dns_data.json'
 RESULTS = 'results'
 SESSIONS = 'sessions'
 FORMAT_TIME = "%m/%d/%Y, %H:%M:%S"

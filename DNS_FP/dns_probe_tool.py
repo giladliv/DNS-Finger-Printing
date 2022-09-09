@@ -1,7 +1,7 @@
 import argparse
-from dns_classes.DNS_FP_runner import *
-from dns_classes.DNS_ttl_analyzer import *
-from dns_classes.cache_graph_gui import *
+from DNS_FP_runner import *
+from DNS_ttl_analyzer import *
+from cache_graph_gui import *
 
 FILE_NAME_DOMAIN = 'list_of_domain_names.txt'
 
@@ -110,7 +110,3 @@ if __name__ == "__main__":
             sys.exit(0)
         except SystemExit:
             os._exit(0)
-    except Exception as err:
-        print(err)
-    except:
-        print('exception was occurred')

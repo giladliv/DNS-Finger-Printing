@@ -1,6 +1,7 @@
 from statistics import mean
 
-from dns_classes.dns_data_db import *
+from DNS_FP_runner import *
+from dns_data_db import dns_data_db
 
 class DNS_ttl_analyzer:
     def __init__(self, json_file_name: str = JSON_FILE_NAME_DEFAULT):
