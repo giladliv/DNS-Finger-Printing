@@ -1,5 +1,4 @@
 import argparse
-
 from DNS_FP_runner import *
 from DNS_ttl_analyzer import *
 from cache_graph_gui import *
@@ -59,12 +58,19 @@ def run_analyzer(ip_dns: str, names_file: str, session_name: str = '', repeats: 
     analyzer = DNS_ttl_analyzer(json_file_name)
     print('there are', analyzer.run_all_domains(ip_dns, list_names), 'server behind this one')
 
-
+def install_and_import(package):
+    import importlib
+    try:
+        importlib.import_module(package)
+    except ImportError:
+        import pip
+        pip.main(['install', package])
 
 def main():
+
     print('DNS Cache probing tool v1.0.1')
     parser = argparse.ArgumentParser()
-    parser.add_argument('-a', '--to_analyze', action='store_true', help='if this flag is up than the analyzer program will be activated, '
+    parser.add_argument('-a', '--analyze', action='store_true', help='if this flag is up than the analyzer program will be activated, '
                                                                         'else the regular progam')
     parser.add_argument('-ip', '--ip_dns', required=True, help='the DNS server ip address')
     parser.add_argument('-nf', '--domain_names_file', default=FILE_NAME_DOMAIN, help='the file name of the domain names')
@@ -82,7 +88,7 @@ def main():
 
     args = parser.parse_args()
     is_first_rec = not args.first_not_recursive
-    if args.to_analyze:
+    if args.analyze:
         run_analyzer(ip_dns=args.ip_dns, names_file=args.domain_names_file, json_file_name=args.json_file_name,
                           session_name=args.session_name, repeats=args.repeats, interval_wait_sec=args.wait_sec,
                           is_first_rec=is_first_rec)
@@ -94,6 +100,8 @@ def main():
 # 94.153.241.134 - intresting
 # 88.80.64.8 - good dns for check
 if __name__ == "__main__":
+    install_and_import('alive_progress')
+    install_and_import('argparse')
     try:
         main()
     except KeyboardInterrupt:
@@ -102,3 +110,7 @@ if __name__ == "__main__":
             sys.exit(0)
         except SystemExit:
             os._exit(0)
+    except Exception as err:
+        print(err)
+    except:
+        print('exception was occurred')
