@@ -10,7 +10,7 @@ from random import sample
 import random
 from alive_progress import alive_bar
 from scapy.all import *
-from scapy.layers.dns import DNS, DNSQR, DNSRR
+from scapy.layers.dns import DNS, DNSRR
 
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
@@ -93,7 +93,7 @@ class DNS_FP_runner:
                       UDP(sport=src_port, dport=53) / \
                       DNS(rd=rd_flag, qd=DNSQR(qname=name_domain))
             answer = sr1(dns_req, verbose=0, timeout=sec_timeout)
-            src_port = random.randint(5000, 65535)
+            src_port = random.randint(1024, 65535)
             i += 1
         # bar()
 
