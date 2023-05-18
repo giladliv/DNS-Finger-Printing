@@ -1,16 +1,18 @@
 # https://blog.apnic.net/2021/06/22/cache-me-outside-dns-cache-probing/
 # https://publicdnsserver.com/
+import logging
 import time
 from datetime import datetime
-# logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
+
+
 
 from random import sample
 import random
 from alive_progress import alive_bar
-from scapy import *
+from scapy.all import *
 from scapy.layers.dns import DNS, DNSQR, DNSRR
-from scapy.layers.inet import IP, UDP
-from scapy.sendrecv import sr1
+
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
 INTERVAL_WAIT_SEC = 10
 MAX_WAIT = 5
@@ -26,7 +28,7 @@ class DNS_FP_runner:
         @param list_names: the list of domain names
         @param json_file_name: the json (the db) file name
         """
-        if not self.is_ipv4(DNS_address):
+        if not DNS_FP_runner.is_ipv4(DNS_address):
             raise ValueError(f'the given string: {DNS_address} is not an ipv4 format')
         self.DNS_address = DNS_address
         # TODO: add type of reading data
@@ -87,11 +89,13 @@ class DNS_FP_runner:
         i = 0
         dns_req = IP()
         while answer is None and i < 4:
-            dns_req = IP(dst=dns_server_ip) / UDP(sport=src_port, dport=53) / DNS(rd=rd_flag, qd=DNSQR(qname=name_domain))
+            dns_req = IP(dst=dns_server_ip) / \
+                      UDP(sport=src_port, dport=53) / \
+                      DNS(rd=rd_flag, qd=DNSQR(qname=name_domain))
             answer = sr1(dns_req, verbose=0, timeout=sec_timeout)
-            src_port = random.randint(1024, 65535)
+            src_port = random.randint(5000, 65535)
             i += 1
-        bar()
+        # bar()
 
         # count rd that has been chanched by the dns server
         if (answer is not None) and (not is_recursive):
@@ -132,6 +136,7 @@ class DNS_FP_runner:
                 port = dict_names_ports[name]
                 name_domain, dns_packets = self.send_DNS_request(dns_main_ip, name, port, bar, is_recursive=is_recursive)  # run dns query
                 self.dns_dict[name_domain] = dns_packets
+                bar()
 
         # store the result to the db and return it
         # TODO: add the save to the db
@@ -190,4 +195,4 @@ def wait_bar(interval_wait_sec: int = INTERVAL_WAIT_SEC):
 
 def get_domain_name_list(file_name_domains: str):
     with open(file_name_domains, 'r') as f:
-        return f.read().replace('\r', '').split('\n')
+        return [s.replace('\n', '') for s in f.readlines()]
