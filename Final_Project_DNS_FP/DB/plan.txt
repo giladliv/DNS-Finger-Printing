@@ -1,0 +1,3 @@
+this is the plan to get a dictionary of all the necessary data,
+try to save and load it
+after that to crate a feature extractor
