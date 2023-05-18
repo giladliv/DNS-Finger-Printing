@@ -14,5 +14,5 @@ this db should save some data:
 
 class IDNS_DB:
     def __init__(self):
-        pass
+        raise NotImplementedError("IDNS_DB is an abstract class")
 

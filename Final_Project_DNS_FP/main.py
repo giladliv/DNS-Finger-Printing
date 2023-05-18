@@ -2,20 +2,13 @@
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+from dns_engine.dns_req_machine import *
 
 def main():
-    print_hi('PyCharm')
-    d = {}
-    end = 5
-    for i in range(1, end+1):
-        d[str(i)] = i
-    for n in d:
-        print(n, end=' ')
+    names = get_domain_name_list('data/list_of_domain_names.txt')
+    runner = DNS_FP_runner('8.8.8.8', names)
+    run_result = runner.run_names_with_dns()
+
 
 
 # Press the green button in the gutter to run the script.

@@ -8,12 +8,14 @@ from random import sample
 import random
 from alive_progress import alive_bar
 from scapy import *
-from scapy.layers.dns import DNS, DNSQR
+from scapy.layers.dns import DNS, DNSQR, DNSRR
 from scapy.layers.inet import IP, UDP
 from scapy.sendrecv import sr1
 
 INTERVAL_WAIT_SEC = 10
 MAX_WAIT = 5
+PKT_SENT = 'pkt_sent'
+PKT_RECV = 'pkt_recv'
 
 class DNS_FP_runner:
     """ the class runs the DNS queries and manage the sessions """
@@ -96,7 +98,7 @@ class DNS_FP_runner:
             self.rd_counter += answer[DNS].rd
             self.pkt_counter += 1
 
-        return name_domain, {'pkt_recv': answer, 'pkt_sent': dns_req}
+        return name_domain, {PKT_RECV: answer, PKT_SENT: dns_req}
 
     def gen_port_names(self, add_names):
         """
@@ -128,15 +130,16 @@ class DNS_FP_runner:
         with alive_bar(len(names), title=title, theme='classic') as bar:  # for showing progress of the packets
             for name in dict_names_ports:
                 port = dict_names_ports[name]
-                name_ip, dns_packets = self.send_DNS_request(dns_main_ip, name, port, bar, is_recursive=is_recursive)  # run dns query
-                self.dns_dict[name_ip] = dns_packets
+                name_domain, dns_packets = self.send_DNS_request(dns_main_ip, name, port, bar, is_recursive=is_recursive)  # run dns query
+                self.dns_dict[name_domain] = dns_packets
 
         # store the result to the db and return it
         # TODO: add the save to the db
         #return self.dns_db.add_data_to_db(dns_main_ip, time_sample, self.dns_dict, label_session)
         return self.dns_dict
 
-    def get_data_from_pkts(self, pkt_dict: dict):
+    @staticmethod
+    def get_data_from_pkts(pkt_dict: dict):
         """
         the function parsers the query's answer that got from the DNS_FP_runner class
         @param pkt_dict: the dict that contains the sent and received packets
@@ -145,12 +148,12 @@ class DNS_FP_runner:
         dns_addr = 'No answer received...'
         dns_ttl = 0
         dns_time = MAX_WAIT
-        # if keys doesnt match to the pkt then return generic message
-        if ('pkt_recv' not in pkt_dict) or ('pkt_sent' not in pkt_dict):
+        # if keys doesn't match to the pkt then return generic message
+        if (PKT_RECV not in pkt_dict) or (PKT_SENT not in pkt_dict):
             return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl, 'sent_time': 0, 'recv_time': 0}
 
-        answer = pkt_dict['pkt_recv']
-        dns_req = pkt_dict['pkt_sent']
+        answer = pkt_dict[PKT_RECV]
+        dns_req = pkt_dict[PKT_SENT]
         # if the packets aren't None nor packet class then return with generic ans
         if ((type(dns_req) is not IP) and (dns_req is not None)) or \
                 ((type(answer) is not IP) and (answer is not None)):
@@ -184,3 +187,7 @@ def wait_bar(interval_wait_sec: int = INTERVAL_WAIT_SEC):
         for i in range(sec_time):
             time.sleep(1)
             bar()
+
+def get_domain_name_list(file_name_domains: str):
+    with open(file_name_domains, 'r') as f:
+        return f.read().replace('\r', '').split('\n')
