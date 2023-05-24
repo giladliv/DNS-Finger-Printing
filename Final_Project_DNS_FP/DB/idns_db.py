@@ -11,8 +11,15 @@ this db should save some data:
 8. DNS response
 9. Session's Name
 '''
+from abc import abstractmethod
+
 
 class IDNS_DB:
+    @abstractmethod
     def __init__(self):
-        raise NotImplementedError("IDNS_DB is an abstract class")
+        pass
+
+    def a(self):
+        pass
+
 

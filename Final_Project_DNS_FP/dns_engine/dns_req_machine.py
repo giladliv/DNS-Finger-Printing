@@ -3,14 +3,14 @@
 import logging
 import time
 from datetime import datetime
-
-
-
 from random import sample
 import random
 from alive_progress import alive_bar
 from scapy.all import *
-from scapy.layers.dns import DNS, DNSRR
+from scapy.layers.dns import DNS, DNSRR, DNSQR
+from scapy.layers.inet import IP, UDP
+
+from utils.utils import *
 
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
@@ -155,14 +155,16 @@ class DNS_FP_runner:
         dns_time = MAX_WAIT
         # if keys doesn't match to the pkt then return generic message
         if (PKT_RECV not in pkt_dict) or (PKT_SENT not in pkt_dict):
-            return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl, 'sent_time': 0, 'recv_time': 0}
+            return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl,
+                    'sent_time': 0, 'recv_time': 0, PKT_SENT: None, PKT_RECV: None}
 
-        answer = pkt_dict[PKT_RECV]
         dns_req = pkt_dict[PKT_SENT]
+        answer = pkt_dict[PKT_RECV]
         # if the packets aren't None nor packet class then return with generic ans
         if ((type(dns_req) is not IP) and (dns_req is not None)) or \
                 ((type(answer) is not IP) and (answer is not None)):
-            return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl, 'sent_time': 0, 'recv_time': 0}
+            return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl, 'sent_time': 0, 'recv_time': 0,
+                    PKT_SENT: dns_req, PKT_RECV: answer}
 
         sent_time = dns_req.sent_time
         recv_time = sent_time + MAX_WAIT if (answer is None) else answer.time   # max data if answer couldn't recv
@@ -179,7 +181,45 @@ class DNS_FP_runner:
                     dns_ttl += answer[DNSRR][i].ttl
                 dns_ttl = round(dns_ttl / RR_ans)  # get average
 
-        return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl, 'sent_time': sent_time, 'recv_time': recv_time}
+        return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl, 'sent_time': sent_time, 'recv_time': recv_time,
+                PKT_SENT: dns_req, PKT_RECV: answer}
+
+def run_session(DNS_address: str, list_names: list, session_name: str = '', repeats: int = 8,
+                interval_wait_sec: int = INTERVAL_WAIT_SEC, is_first_rec: bool = True,
+                to_show_results: bool = True, json_file_name: str = JSON_FILE_NAME_DEFAULT):
+    """
+    run session of queries
+    """
+    session_name = datetime.now().strftime(FORMAT_TIME) if session_name == '' else session_name
+    dns_fp_run = DNS_FP_runner(DNS_address, list_names, json_file_name)
+
+    list_ans_vals = []
+    for i in range(repeats):
+        is_rec = (i == 0) and is_first_rec
+        str_title = f'round %d out of %d' % (i + 1, repeats)
+        list_ans_vals += \
+            [dns_fp_run.run_names_with_dns(is_recursive=is_rec, title=str_title, label_session=session_name)]
+        if i == repeats - 1:
+            continue
+        wait_bar(interval_wait_sec)
+
+    return list_ans_vals, session_name
+
+def run_session_ip_list(DNS_address_list: list, list_names: list, session_name: str = '', repeats: int = 8,
+                interval_wait_sec: int = INTERVAL_WAIT_SEC, is_first_rec: bool = True,
+                to_show_results: bool = True, json_file_name: str = JSON_FILE_NAME_DEFAULT):
+    """
+    run session of queries
+    """
+    session_name = datetime.now().strftime(FORMAT_TIME) if session_name == '' else session_name
+
+    for dns_addr in DNS_address_list:
+        # TODO - enter saving data
+        run_session(dns_addr, list_names, session_name=session_name, repeats=repeats,
+                    interval_wait_sec=interval_wait_sec, is_first_rec=is_first_rec,
+                    to_show_results=to_show_results, json_file_name=json_file_name)
+
+    return list_ans_vals, session_name
 
 
 def wait_bar(interval_wait_sec: int = INTERVAL_WAIT_SEC):
