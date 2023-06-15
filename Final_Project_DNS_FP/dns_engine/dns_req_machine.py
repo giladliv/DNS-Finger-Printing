@@ -1,16 +1,13 @@
 # https://blog.apnic.net/2021/06/22/cache-me-outside-dns-cache-probing/
 # https://publicdnsserver.com/
-import logging
-import time
-from datetime import datetime
 from random import sample
-import random
 from alive_progress import alive_bar
 from scapy.all import *
 from scapy.layers.dns import DNS, DNSRR, DNSQR
 from scapy.layers.inet import IP, UDP
 
 from utils.utils import *
+from utils.scapy2dict import *
 
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
@@ -135,7 +132,8 @@ class DNS_FP_runner:
             for name in dict_names_ports:
                 port = dict_names_ports[name]
                 name_domain, dns_packets = self.send_DNS_request(dns_main_ip, name, port, bar, is_recursive=is_recursive)  # run dns query
-                self.dns_dict[name_domain] = dns_packets
+                # update that features are out
+                self.dns_dict[name_domain] = self.get_data_from_pkts(dns_packets) # dns_packets
                 bar()
 
         # store the result to the db and return it
@@ -182,7 +180,7 @@ class DNS_FP_runner:
                 dns_ttl = round(dns_ttl / RR_ans)  # get average
 
         return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl, 'sent_time': sent_time, 'recv_time': recv_time,
-                PKT_SENT: dns_req, PKT_RECV: answer}
+                PKT_SENT: Packet2Dict(dns_req).to_dict().maps, PKT_RECV: Packet2Dict(answer).to_dict().maps}
 
 def run_session(DNS_address: str, list_names: list, session_name: str = '', repeats: int = 8,
                 interval_wait_sec: int = INTERVAL_WAIT_SEC, is_first_rec: bool = True,
@@ -212,14 +210,15 @@ def run_session_ip_list(DNS_address_list: list, list_names: list, session_name: 
     run session of queries
     """
     session_name = datetime.now().strftime(FORMAT_TIME) if session_name == '' else session_name
-
+    dict_ans_vals = {}
     for dns_addr in DNS_address_list:
         # TODO - enter saving data
-        run_session(dns_addr, list_names, session_name=session_name, repeats=repeats,
+        list_ans_vals, _ = run_session(dns_addr, list_names, session_name=session_name, repeats=repeats,
                     interval_wait_sec=interval_wait_sec, is_first_rec=is_first_rec,
                     to_show_results=to_show_results, json_file_name=json_file_name)
+        dict_ans_vals[dns_addr] = list_ans_vals
 
-    return list_ans_vals, session_name
+    return dict_ans_vals, session_name
 
 
 def wait_bar(interval_wait_sec: int = INTERVAL_WAIT_SEC):
