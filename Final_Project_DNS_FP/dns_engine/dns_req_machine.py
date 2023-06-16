@@ -180,7 +180,7 @@ class DNS_FP_runner:
                 dns_ttl = round(dns_ttl / RR_ans)  # get average
 
         return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl, 'sent_time': sent_time, 'recv_time': recv_time,
-                PKT_SENT: Packet2Dict(dns_req).to_dict().maps, PKT_RECV: Packet2Dict(answer).to_dict().maps}
+                PKT_SENT: bytes(dns_req), PKT_RECV: bytes(answer)}
 
 def run_session(DNS_address: str, list_names: list, session_name: str = '', repeats: int = 8,
                 interval_wait_sec: int = INTERVAL_WAIT_SEC, is_first_rec: bool = True,
