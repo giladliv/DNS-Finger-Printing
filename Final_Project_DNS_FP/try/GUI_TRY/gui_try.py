@@ -58,18 +58,28 @@ class NewprojectApp:
             curr_pos = min(curr_pos + n, max_num)
         else:
             curr_pos = max(curr_pos + n, 0)
-        self.label4['text'] = f'{round(curr_pos / max_num * 100, 2)}%'
+        self.label4['text'] = f'{self.get_percent_fixed(curr_pos, max_num)}%'
         self.prog_bar.set(curr_pos)
+
+    @staticmethod
+    def get_percent_fixed(n, max_num = 100, after_dot=2):
+        n = n / max_num * 100
+        if n.is_integer():
+            return int(n)
+        else:
+            return round(n, after_dot)
+
         
 
     def up_val(self):
-        self.prog_bar.set(self.prog_bar.get() + 10)
-        print(round(1324343032.746, 2))
+        #   self.prog_bar.set(self.prog_bar.get() + 10)
+        self.make_move_proccess(10)
 
     def down_val(self):
-        self.prog_bar.set(self.prog_bar.get() - 10)
+        self.make_move_proccess(-10)
 
 
 if __name__ == "__main__":
     app = NewprojectApp()
+    print(f'{round(0.69999, 3)}')
     app.run()
