@@ -28,7 +28,7 @@
             <property name="length">600</property>
             <property name="orient">horizontal</property>
             <property name="value">0</property>
-            <property name="variable">string:prog_bar</property>
+            <property name="variable">int:prog_bar</property>
             <layout manager="grid">
               <property name="column">0</property>
               <property name="row">0</property>
