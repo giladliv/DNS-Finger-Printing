@@ -9,7 +9,7 @@ class RunMe:
         # build ui
         toplevel1 = tk.Tk() if master is None else tk.Toplevel(master)
         toplevel1.configure(height=200, width=200)
-        toplevel1.geometry("800x600")
+        toplevel1.geometry("1024x768")
         self.prog_frame_1 = ProgressSet(toplevel1, jump=10)
         self.prog_frame_2 = ProgressSet(toplevel1, jump=15)
         self.prog_frame_3 = ProgressSet(toplevel1, jump=20)

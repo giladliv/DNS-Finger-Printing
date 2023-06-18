@@ -15,7 +15,7 @@
     <child>
       <object class="ttk.Frame" id="frame1">
         <property name="height">40</property>
-        <property name="width">700</property>
+        <property name="width">800</property>
         <layout manager="pack">
           <property name="side">top</property>
         </layout>
@@ -36,6 +36,7 @@
         </child>
         <child>
           <object class="ttk.Label" id="prog_label" named="True">
+            <property name="compound">center</property>
             <property name="justify">left</property>
             <property name="text" translatable="yes">100%</property>
             <property name="width">6</property>
@@ -46,10 +47,30 @@
           </object>
         </child>
         <child>
-          <object class="ttk.Label" id="label1">
+          <object class="ttk.Label" id="space_lbl1" named="True">
             <property name="text" translatable="yes">  </property>
             <layout manager="grid">
               <property name="column">1</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Label" id="space_lbl2" named="True">
+            <property name="text" translatable="yes">    </property>
+            <layout manager="grid">
+              <property name="column">4</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Label" id="label3">
+            <property name="justify">left</property>
+            <property name="text" translatable="yes">-/-</property>
+            <property name="width">20</property>
+            <layout manager="grid">
+              <property name="column">5</property>
               <property name="row">0</property>
             </layout>
           </object>

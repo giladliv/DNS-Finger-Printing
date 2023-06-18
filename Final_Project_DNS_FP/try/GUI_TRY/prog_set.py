@@ -19,11 +19,13 @@ class ProgressSet:
         self.set_progress(max_size, jump)
 
     def __build_visual(self, toplevel1):
-        self.title_lable = ttk.Label(toplevel1)
+        self.toplevel1 = toplevel1
+
+        self.title_lable = ttk.Label(self.toplevel1)
         self.title_lable.configure(text='title')
         self.title_lable.pack(side="top")
-        self.frame1 = ttk.Frame(toplevel1)
-        self.frame1.configure(height=50, width=700)
+        self.frame1 = ttk.Frame(self.toplevel1)
+        self.frame1.configure(height=40, width=700)
         self.progressbar1 = ttk.Progressbar(self.frame1)
         self.prog_bar = tk.IntVar(value=0)
         self.progressbar1.configure(
@@ -31,16 +33,16 @@ class ProgressSet:
             orient="horizontal",
             value=0,
             variable=self.prog_bar)
-        self.progressbar1.pack(side="left")
-        self.space_lbl = ttk.Label(self.frame1)
-        self.space_lbl.configure(text='  ')
-        self.space_lbl.pack(side="left")
+        self.progressbar1.grid(column=0, row=0)
         self.prog_label = ttk.Label(self.frame1)
-        self.prog_label.configure(text='0%')
-        self.prog_label.pack(side="left")
+        self.prog_label.configure(text='0%', width=6)
+        self.prog_label.grid(column=3, row=0)
+        self.label1 = ttk.Label(self.frame1)
+        self.label1.configure(text='  ')
+        self.label1.grid(column=1, row=0)
         self.frame1.pack(side="top")
-        self.frame1.pack_propagate(0)
-        self.mark_label = ttk.Label(toplevel1)
+        self.frame1.grid_propagate(0)
+        self.mark_label = ttk.Label(self.toplevel1)
         self.mark_label.configure(text='mark')
         self.mark_label.pack(side="top")
 
