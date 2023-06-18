@@ -4,7 +4,7 @@ import tkinter.ttk as ttk
 
 
 class ProgressSet:
-    FORMAT_PERC = '    {}%'
+    FORMAT_PERC = '  {}%'
     FORMAT_MARK = '{}\n'
 
     def __init__(self, master, max_size: int = 100, jump: int = 1, title: str = 'title'):
@@ -13,11 +13,17 @@ class ProgressSet:
         self.jump = 0
         self.max_size = 0
 
-        self.title_lable = ttk.Label(master)
-        self.title_lable.configure(text=title)
+        self.__build_visual(master)
+
+        # set the basic data
+        self.set_progress(max_size, jump)
+
+    def __build_visual(self, toplevel1):
+        self.title_lable = ttk.Label(toplevel1)
+        self.title_lable.configure(text='title')
         self.title_lable.pack(side="top")
-        frame1 = ttk.Frame(master)
-        frame1.configure(height=200, width=200)
+        frame1 = ttk.Frame(toplevel1)
+        frame1.configure(height=40, width=700)
         self.progressbar1 = ttk.Progressbar(frame1)
         self.prog_bar = tk.IntVar(value=0)
         self.progressbar1.configure(
@@ -25,16 +31,20 @@ class ProgressSet:
             orient="horizontal",
             value=0,
             variable=self.prog_bar)
-        self.progressbar1.pack(side="left")
+        self.progressbar1.grid(column=0, row=0)
         self.prog_label = ttk.Label(frame1)
-        self.prog_label.configure(text='')
-        self.prog_label.pack(side="right")
+        self.prog_label.configure(text='0%')
+        self.prog_label.grid(column=2, row=0)
+        label1 = ttk.Label(frame1)
+        label1.configure(text='  ')
+        label1.grid(column=1, row=0)
         frame1.pack(side="top")
-        self.mark_label = ttk.Label(master)
-        self.mark_label.configure(text='')
+        frame1.grid_propagate(0)
+        self.mark_label = ttk.Label(toplevel1)
+        self.mark_label.configure(text='mark')
         self.mark_label.pack(side="top")
-        #set the prog
-        self.set_progress(max_size, jump)
+
+
 
     def set_progress(self, max_size: int = 100, jump: int = 1):
         self.max_size = abs(max_size)
