@@ -40,7 +40,7 @@ class ProgressSet:
             compound="center",
             justify="center",
             text='0%')
-        self.prog_label.grid(column=1, row=0)
+        self.prog_label.grid(column=0, row=1)
         self.curr_pos_label = ttk.Label(self.frame1)
         self.curr_pos_label.configure(compound="center", text='-/-')
         self.curr_pos_label.grid(column=0, row=2)
