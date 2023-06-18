@@ -14,39 +14,42 @@ class ProgressSet:
         self.jump = 0
         self.max_size = 0
 
+        # build the UI
         self.__build_visual(master)
 
         # set the basic data
         self.set_progress(max_size, jump)
 
-    def __build_visual(self, toplevel1):
-        self.toplevel1 = toplevel1
+    def __build_visual(self, master):
+        self.master = master
 
-        self.title_lable = ttk.Label(self.toplevel1)
+        self.title_lable = ttk.Label(self.master)
         self.title_lable.configure(text='title')
         self.title_lable.pack(side="top")
-        self.frame1 = ttk.Frame(self.toplevel1)
+        self.frame1 = ttk.Frame(self.master)
         self.frame1.configure(height=40, width=800)
-        self.progressbar1 = ttk.Progressbar(self.frame1)
+        self.progressbar = ttk.Progressbar(self.frame1)
         self.prog_bar = tk.IntVar(value=0)
-        self.progressbar1.configure(
+        self.progressbar.configure(
             length=600,
             orient="horizontal",
             value=0,
             variable=self.prog_bar)
-        self.progressbar1.grid(column=0, row=0)
+        self.progressbar.grid(column=0, row=0)
         self.prog_label = ttk.Label(self.frame1)
         self.prog_label.configure(
-            compound="center",
-            justify="center",
-            text='0%')
-        self.prog_label.grid(column=0, row=1)
-        self.curr_pos_label = ttk.Label(self.frame1)
-        self.curr_pos_label.configure(compound="center", text='-/-')
-        self.curr_pos_label.grid(column=0, row=2)
+            text='100%',
+            width=5)
+        self.prog_label.grid(column=2, row=0)
+        self.space_lbl = ttk.Label(self.frame1)
+        self.space_lbl.configure(text='  ')
+        self.space_lbl.grid(column=1, row=0)
         self.frame1.pack(fill="both", side="top")
         self.frame1.grid_anchor("s")
-        self.mark_label = ttk.Label(self.toplevel1)
+        self.curr_pos_label = ttk.Label(self.master)
+        self.curr_pos_label.configure(text='- / -')
+        self.curr_pos_label.pack(side="top")
+        self.mark_label = ttk.Label(self.master)
         self.mark_label.configure(text='mark')
         self.mark_label.pack(side="top")
 
@@ -55,7 +58,7 @@ class ProgressSet:
     def set_progress(self, max_size: int = 100, jump: int = 1):
         self.max_size = abs(max_size)
         self.jump = abs(jump)
-        self.progressbar1['maximum'] = self.max_size
+        self.progressbar['maximum'] = self.max_size
         self.prog_bar.set(0)
         self.prog_label['text'] = self.FORMAT_PERC.format(0)
         self.curr_pos_label['text'] = self.FORMAT_PROG_NUM.format('-', '-')
