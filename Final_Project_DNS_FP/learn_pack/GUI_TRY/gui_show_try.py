@@ -1,8 +1,6 @@
 #!/usr/bin/python3
-import tkinter as tk
-from tkinter import ttk
 
-from prog_set import *
+from GUI.prog_set import *
 
 class RunMe:
     def __init__(self, master=None):

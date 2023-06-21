@@ -3,7 +3,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 
 
-class NewprojectApp:
+class TryWindGUI:
     def __init__(self, master=None):
         # build ui
         toplevel1 = tk.Tk() if master is None else tk.Toplevel(master)
@@ -80,6 +80,6 @@ class NewprojectApp:
 
 
 if __name__ == "__main__":
-    app = NewprojectApp()
     print(f'{round(0.69999, 3)}')
+    app = TryWindGUI()
     app.run()
