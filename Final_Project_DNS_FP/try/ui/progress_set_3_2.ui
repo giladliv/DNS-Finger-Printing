@@ -37,8 +37,6 @@
         </child>
         <child>
           <object class="ttk.Label" id="prog_label" named="True">
-            <property name="compound">center</property>
-            <property name="justify">center</property>
             <property name="text" translatable="yes">100%</property>
             <property name="width">5</property>
             <layout manager="grid">
