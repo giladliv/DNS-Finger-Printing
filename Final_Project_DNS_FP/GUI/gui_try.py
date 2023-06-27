@@ -81,5 +81,6 @@ class TryWindGUI:
 
 if __name__ == "__main__":
     print(f'{round(0.69999, 3)}')
+    print(type(None) not in [str, dict])
     app = TryWindGUI()
     app.run()

@@ -4,6 +4,7 @@ import tkinter.ttk as ttk
 from tkinter import messagebox
 from ttkwidgets.autocomplete.autocompletecombobox import AutocompleteCombobox
 from DB.dns_db import *
+from GUI.widgets.combobox_widget import ComboBoxWidget
 
 
 class MainWindow:
@@ -37,8 +38,11 @@ class MainWindow:
         self.button1.configure(text='RUN')
         self.button1.grid(column=2, row=10)
         self.button1.configure(command=self.run_test)
-        self.autocompletecombobox1 = AutocompleteCombobox(
-            self.frame1)#, completevalues=self.NAMES)
+        my_list = ['1', '2']
+        self.autocompletecombobox1 = ComboBoxWidget(
+            self.frame1, values_selection=my_list)#, completevalues=self.NAMES)
+        my_list.append('3')
+        self.autocompletecombobox1.print()
         self.autocompletecombobox1.configure(validate="focusout", width=25)
         self.autocompletecombobox1.grid(column=2, row=0, sticky="ew")
         # _validatecmd = (
@@ -67,7 +71,7 @@ class MainWindow:
 
         self.__set_validation_widget(self.autocompletecombobox1)
         self.db = db
-        self.set_checkbox_options()
+        # self.set_checkbox_options()
 
         # Main widget
         self.mainwindow = self.toplevel1
