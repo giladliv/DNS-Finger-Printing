@@ -88,7 +88,10 @@
         </child>
         <child>
           <object class="ttkwidgets.AutocompleteCombobox" id="autocompletecombobox1">
-            <property name="completevalues">['Gilad', 'David', 'Irit']</property>
+            <property name="completevalues">Gilad David Irit</property>
+            <property name="invalidcommand" type="command" cbtype="entry_validate" args="%P">on_invalid</property>
+            <property name="validate">focusout</property>
+            <property name="validatecommand" type="command" cbtype="entry_validate" args="%P">checkbox_validate</property>
             <property name="width">25</property>
             <layout manager="grid">
               <property name="column">2</property>

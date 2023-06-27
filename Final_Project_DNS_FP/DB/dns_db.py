@@ -1,8 +1,8 @@
 from DB.idns_db import *
 from utils.utils import *
 
-F_DOMAIN_NAMES = 'data/list_of_domain_names.txt'
-F_DNS_SERVER_IP = 'data/list_dns_servers_ip.txt'
+F_DOMAIN_NAMES = '../data/list_of_domain_names.txt'
+F_DNS_SERVER_IP = '../data/list_dns_servers_ip.txt'
 
 
 class DnsDBFiles(IDNS_DB):
@@ -35,3 +35,7 @@ class DnsDBFiles(IDNS_DB):
     @staticmethod
     def get_list_of_testers():
         return ['Gilad', 'David', 'Irit']
+
+# db_files = DnsDBFiles()
+# print(db_files.get_list_dns_server_ip())
+
