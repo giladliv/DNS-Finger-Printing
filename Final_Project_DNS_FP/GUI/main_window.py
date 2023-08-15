@@ -5,11 +5,12 @@ from tkinter import messagebox
 from ttkwidgets.autocomplete.autocompletecombobox import AutocompleteCombobox
 from DB.dns_db import *
 from GUI.widgets.combobox_widget import *
-
+from dns_engine.dns_req_machine import DNS_FP_runner
+from GUI.widgets.confirm_window import ConfirmDeatilsWindow
 
 class MainWindow:
     NAMES = ['Gilad', 'David', 'Irit']
-    def __init__(self, master=None, db = DnsDBFiles()):
+    def __init__(self, master=None, db = DNSJsonDB()):
         # build ui
         self.toplevel1 = tk.Tk() if master is None else tk.Toplevel(master)
         self.toplevel1.configure(height=200, width=200)
@@ -32,30 +33,30 @@ class MainWindow:
         self.label5 = ttk.Label(self.frame1)
         self.label5.configure(text='Session Name:')
         self.label5.grid(column=0, row=8)
-        self.entry2 = ttk.Entry(self.frame1)
-        self.entry2.grid(column=2, row=8, sticky="ew")
+        self.session_name_text = tk.StringVar()
+        self.entry_session_name = ttk.Entry(self.frame1, textvariable=self.session_name_text)
+        self.entry_session_name.grid(column=2, row=8, sticky="ew")
         self.button1 = ttk.Button(self.frame1)
         self.button1.configure(text='RUN')
         self.button1.grid(column=2, row=10)
         self.button1.configure(command=self.run_test)
-        self.autocompletecombobox1 = ComboBoxDict(
-            self.frame1, values_selection={'1': 3, '2': 5, '4': 897})#, completevalues=self.NAMES)
-        self.autocompletecombobox1.configure(width=25)
-        self.autocompletecombobox1.grid(column=2, row=0, sticky="ew")
+        self.combo_tester_name = ComboBoxWidget(self.frame1)    #, values_selection=self.NAMES)#, completevalues=self.NAMES)
+        self.combo_tester_name.configure(width=25)
+        self.combo_tester_name.grid(column=2, row=0, sticky="ew")
         # _validatecmd = (
-        #     self.autocompletecombobox1.register(
+        #     self.combo_tester_name.register(
         #         self.checkbox_validate), "%P")
-        # self.autocompletecombobox1.configure(validatecommand=_validatecmd)
+        # self.combo_tester_name.configure(validatecommand=_validatecmd)
         # _validatecmd = (
-        #     self.autocompletecombobox1.register(
-        #         self.on_invalid), "%P", '%S', self.autocompletecombobox1)
+        #     self.combo_tester_name.register(
+        #         self.on_invalid), "%P", '%S', self.combo_tester_name)
 
-        self.autocompletecombobox2 = AutocompleteCombobox(self.frame1)
-        self.autocompletecombobox2.grid(column=2, row=2, sticky="ew")
-        self.autocompletecombobox3 = AutocompleteCombobox(self.frame1)
-        self.autocompletecombobox3.grid(column=2, row=4, sticky="ew")
-        self.autocompletecombobox4 = AutocompleteCombobox(self.frame1)
-        self.autocompletecombobox4.grid(column=2, row=6, sticky="ew")
+        self.combo_site = ComboBoxWidget(self.frame1)
+        self.combo_site.grid(column=2, row=2, sticky="ew")
+        self.combo_dns_servers = ComboBoxWidget(self.frame1)
+        self.combo_dns_servers.grid(column=2, row=4, sticky="ew")
+        self.combo_domain_names = ComboBoxWidget(self.frame1)
+        self.combo_domain_names.grid(column=2, row=6, sticky="ew")
         self.frame1.pack(side="top")
         self.frame1.rowconfigure(1, minsize=20)
         self.frame1.rowconfigure(3, minsize=20)
@@ -66,9 +67,9 @@ class MainWindow:
         self.frame1.columnconfigure(1, minsize=5)
         self.frame1.columnconfigure("all", minsize=20)
 
-        #self.__set_validation_widget(self.autocompletecombobox1)
+        #self.__set_validation_widget(self.combo_tester_name)
         self.db = db
-        # self.set_checkbox_options()
+        self.set_checkbox_options()
 
         # Main widget
         self.mainwindow = self.toplevel1
@@ -79,40 +80,36 @@ class MainWindow:
 
     def run_test(self):
         print('button clicked')
-        print('selected', self.autocompletecombobox1.get_selection())
+        print('selected', self.combo_tester_name.get())
+        print(self.combo_dns_servers.get())
+        tester_name = self.combo_tester_name.get()
+        site = self.combo_site.get()
+        selected_srv_nams, dns_servers = self.combo_dns_servers.get()
+        selected_dm_nams, domain_names = self.combo_domain_names.get()
+        session_name = DNS_FP_runner.gen_session_name(self.session_name_text.get())     # already checks if good
+
+        print('tester:', tester_name)
+        print('site:', site)
+        print('dns servers:', selected_srv_nams, dns_servers)
+        print('domain names:', selected_dm_nams, domain_names)
+        print('session name:', session_name)
+        confirm_details_win = ConfirmDeatilsWindow(tester=tester_name, site=site,
+                                                   dns_servers=(selected_srv_nams, dns_servers),
+                                                   domain_names=(selected_dm_nams, domain_names), session_name=session_name)
+        from GUI.widgets.table_widget import create_table_window
+        create_table_window(*confirm_details_win.get_as_table_data())
+
 
     def set_checkbox_options(self):
-        self.autocompletecombobox1.set_values_selection(self.NAMES)
-        self.autocompletecombobox3['completevalues'] = self.db.get_list_dns_server_ip()
+        self.combo_tester_name.set_values_selection(self.NAMES)
+        self.combo_site.set_values_selection(self.db.get_sites())
+        self.combo_dns_servers.set_values_selection(self.db.get_dns_server_ip())
+        self.combo_domain_names.set_values_selection(self.db.get_domain_names())
 
+    # def valid_session_name(self):
+    #     session = self.session_name_text.get()
+    #     return session != '' and True   # TODO: add checkbox near
 
-    @staticmethod
-    def __checkbox_validate(widget):
-        def checkbox_validate_inner(p_entry_value):
-            return p_entry_value in widget['completevalues'] or p_entry_value == ''
-        return checkbox_validate_inner
-
-    @staticmethod
-    def __on_invalid(widget):
-        def on_invalid_inner(p_entry_value, s_prev_value):
-            messagebox.showerror('error tester name', f'{p_entry_value} is not on the list')
-            widget.set('')
-
-        return on_invalid_inner
-
-    @staticmethod
-    def __make_ivalid(widget):
-        widget.configure(
-            invalidcommand=(widget.register(MainWindow.__on_invalid(widget)), "%P", '%S'))  # tring to make it short as function
-
-    @staticmethod
-    def __make_valid(widget):
-        widget.configure(validatecommand=(widget.register(MainWindow.__checkbox_validate(widget)), "%P"))
-
-    @staticmethod
-    def __set_validation_widget(widget):
-        MainWindow.__make_ivalid(widget)
-        MainWindow.__make_valid(widget)
 
 
 

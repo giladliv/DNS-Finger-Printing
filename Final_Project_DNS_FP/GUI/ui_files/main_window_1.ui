@@ -14,6 +14,7 @@
         </layout>
         <containerlayout manager="grid">
           <property type="col" id="1" name="minsize">5</property>
+          <property type="col" id="3" name="minsize">5</property>
           <property type="col" id="all" name="minsize">20</property>
           <property type="row" id="1" name="minsize">20</property>
           <property type="row" id="3" name="minsize">20</property>
@@ -124,6 +125,16 @@
               <property name="column">2</property>
               <property name="row">6</property>
               <property name="sticky">ew</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Checkbutton" id="checkbox_auto_session" named="True">
+            <property name="command" type="command" cbtype="simple">auto_session_click</property>
+            <property name="text" translatable="yes">automatic</property>
+            <layout manager="grid">
+              <property name="column">4</property>
+              <property name="row">8</property>
             </layout>
           </object>
         </child>

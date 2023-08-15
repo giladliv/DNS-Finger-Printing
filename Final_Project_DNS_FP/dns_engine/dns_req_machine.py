@@ -182,13 +182,22 @@ class DNS_FP_runner:
         return {'time': dns_time, 'addr': dns_addr, 'ttl': dns_ttl, 'sent_time': sent_time, 'recv_time': recv_time,
                 PKT_SENT: bytes(dns_req), PKT_RECV: bytes(answer)}
 
+    @staticmethod
+    def gen_session_name(session_name: str = ''):
+        '''
+        generates the session name to see the results
+        :param session_name:
+        :return:
+        '''
+        return datetime.now().strftime(FORMAT_TIME) if session_name == '' else session_name
+
 def run_session(DNS_address: str, list_names: list, session_name: str = '', repeats: int = 8,
                 interval_wait_sec: int = INTERVAL_WAIT_SEC, is_first_rec: bool = True,
                 to_show_results: bool = True, json_file_name: str = JSON_FILE_NAME_DEFAULT):
     """
     run session of queries
     """
-    session_name = datetime.now().strftime(FORMAT_TIME) if session_name == '' else session_name
+    session_name = DNS_FP_runner.gen_session_name(session_name)
     dns_fp_run = DNS_FP_runner(DNS_address, list_names, json_file_name)
 
     list_ans_vals = []
@@ -209,7 +218,7 @@ def run_session_ip_list(DNS_address_list: list, list_names: list, session_name: 
     """
     run session of queries
     """
-    session_name = datetime.now().strftime(FORMAT_TIME) if session_name == '' else session_name
+    session_name = DNS_FP_runner.gen_session_name(session_name)
     dict_ans_vals = {}
     for dns_addr in DNS_address_list:
         # TODO - enter saving data

@@ -8,6 +8,8 @@ class ComboBoxWidget(AutocompleteCombobox):
         super().__init__(master, **kwargs)
         self.__set_validation_widget()
         self.__values = None
+        if values_selection is None:
+            values_selection = []
         self.set_values_selection(values_selection)
 
     def set_values_selection(self, selection = None):
@@ -18,8 +20,8 @@ class ComboBoxWidget(AutocompleteCombobox):
         self.__values = selection.copy()
         self.configure(completevalues=selection)
 
-    def get_selection(self):
-        selected = self.get()
+    def get(self):
+        selected = super().get()
         return \
             (selected, self.__values[selected]) if type(self.__values) is dict \
             else selected
