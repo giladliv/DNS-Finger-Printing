@@ -56,6 +56,8 @@ def create_table_window(columns, lines):
 
     #set the table data
     set_data_to_tables(table=table, columns=columns, lines=lines)
+    btn = ttk.Button(ws, text='CLICK')
+    btn.pack(side=TOP)
 
     ws.mainloop()
 
@@ -64,22 +66,18 @@ def create_table_window(columns, lines):
 CLMN_NAME = 'column name'
 CLMN_TXT = 'column text'
 def set_data_to_tables(table, columns, lines):
-    table['columns'] = columns[1:]
+    table['columns'] = columns
     keys_of_cols = {}
 
 
     # format our column
-    table.column("#0", minwidth=20, stretch=YES)
-    # table.heading("#0", text="", anchor=CENTER)
+    table.column("#0", width=20, anchor=CENTER, stretch=NO)
+    table.heading("#0", text="", anchor=CENTER)
     is_first = True
     for title_og in columns:
 
         col_var = replace_whitespace(title_og, replacement='_').lower()
         col_text = col_var.replace('_', ' ').title()
-        if is_first:
-            table.heading("#0", text=col_text, anchor=CENTER)
-            is_first = not is_first
-            continue
 
         try:
             table.column(col_var, anchor=CENTER, stretch=YES)    # sometimes name can trigger the try_catch
@@ -91,11 +89,45 @@ def set_data_to_tables(table, columns, lines):
 
     for line in lines:
         if not isinstance(line[2], Iterable) or isinstance(line[2], str):
-            table.insert(parent='', index='end', text=line[0], values=line[1:])
+            table.insert(parent='', index='end', values=line)
             continue
-        row = table.insert(parent='', index='end', text=line[0], values=(line[1],'...'))
+        row = table.insert(parent='', index='end', values=line[:2] + ('...',))
         for val in line[2]:
-            table.insert(parent=row, index='end', values=('', val))
+            table.insert(parent=row, index='end', values=('', '', val))
+
+# def set_data_to_tables(table, columns, lines):
+#     table['columns'] = columns[1:]
+#     keys_of_cols = {}
+#
+#
+#     # format our column
+#     table.column("#0", minwidth=20, stretch=YES)
+#     # table.heading("#0", text="", anchor=CENTER)
+#     is_first = True
+#     for title_og in columns:
+#
+#         col_var = replace_whitespace(title_og, replacement='_').lower()
+#         col_text = col_var.replace('_', ' ').title()
+#         if is_first:
+#             table.heading("#0", text=col_text, anchor=CENTER)
+#             is_first = not is_first
+#             continue
+#
+#         try:
+#             table.column(col_var, anchor=CENTER, stretch=YES)    # sometimes name can trigger the try_catch
+#         except:
+#             col_var = replace_whitespace(title_og, replacement='_')
+#             table.column(col_var, anchor=CENTER, stretch=YES)
+#         finally:
+#             table.heading(col_var, text=col_text, anchor=CENTER)
+#
+#     for line in lines:
+#         if not isinstance(line[2], Iterable) or isinstance(line[2], str):
+#             table.insert(parent='', index='end', text=line[0], values=line[1:])
+#             continue
+#         row = table.insert(parent='', index='end', text=line[0], values=(line[1],'...'))
+#         for val in line[2]:
+#             table.insert(parent=row, index='end', values=('', val))
 
     # table.pack()
 

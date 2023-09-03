@@ -1,22 +1,20 @@
 #!/usr/bin/python3
 import tkinter as tk
 import tkinter.ttk as ttk
-from tkinter import messagebox
-from ttkwidgets.autocomplete.autocompletecombobox import AutocompleteCombobox
 from DB.dns_db import *
 from GUI.widgets.combobox_widget import *
 from dns_engine.dns_req_machine import DNS_FP_runner
-from GUI.widgets.confirm_window import ConfirmDeatilsWindow
+from GUI.confirm_window import ConfirmDeatilsWindow
 
 class MainWindow:
     NAMES = ['Gilad', 'David', 'Irit']
     def __init__(self, master=None, db = DNSJsonDB()):
         # build ui
-        self.toplevel1 = tk.Tk() if master is None else tk.Toplevel(master)
-        self.toplevel1.configure(height=200, width=200)
-        self.toplevel1.geometry("1152x768")
-        self.toplevel1.title("DNS FP Make Test")
-        self.frame1 = ttk.Frame(self.toplevel1)
+        self.toplevel = tk.Tk() if master is None else tk.Toplevel(master)
+        self.toplevel.configure(height=200, width=200)
+        self.toplevel.geometry("1152x768")
+        self.toplevel.title("DNS FP Make Test")
+        self.frame1 = ttk.Frame(self.toplevel)
         self.frame1.configure(height=700, width=700)
         self.label1 = ttk.Label(self.frame1)
         self.label1.configure(text='tester name:')
@@ -72,7 +70,7 @@ class MainWindow:
         self.set_checkbox_options()
 
         # Main widget
-        self.mainwindow = self.toplevel1
+        self.mainwindow = self.toplevel
 
 
     def run(self):
