@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from GUI.widgets.progress_widegt.gui_prog_bar_control import ctor_widget_prog_by_widget, ProgBarGUIControl
+from GUI.widgets.progress_widegt.gui_prog_bar_control import ctor_control_prog_by_widget, ProgBarGUIControl
 from GUI.widgets.progress_widegt.prog_widget import *
 
 class RunMe:
@@ -11,7 +11,7 @@ class RunMe:
         self.prog_frame_1 = ProgressWidget(toplevel1, jump=10)
         self.prog_frame_2 = ProgressWidget(toplevel1, jump=10)  # jump 15
         self.prog_frame_3 = ProgressWidget(toplevel1, jump=20)
-        self.widget_control_2 = ctor_widget_prog_by_widget(self.prog_frame_2)(jump=15, title="second by try")
+        self.widget_control_2 = ctor_control_prog_by_widget(self.prog_frame_2)(jump=15, title="second by try")
         button3 = ttk.Button(toplevel1)
         button3.configure(text='press me')
         button3.pack(side="top")

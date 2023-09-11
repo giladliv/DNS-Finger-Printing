@@ -23,35 +23,33 @@ class ProgressWidget:
     def __build_visual(self, master):
         self.master = master
 
-        self.title_lable = ttk.Label(self.master)
-        self.title_lable.configure(text='title')
-        self.title_lable.pack(side="top")
         self.frame1 = ttk.Frame(self.master)
         self.frame1.configure(height=40, width=800)
-        self.progressbar = ttk.Progressbar(self.frame1)
+        self.title_lable = ttk.Label(self.frame1)
+        self.title_lable.configure(text='title')
+        self.title_lable.grid(column=0, row=0)
+        self.main_progressbar = ttk.Progressbar(self.frame1)
         self.prog_bar = tk.IntVar(value=0)
-        self.progressbar.configure(
+        self.main_progressbar.configure(
             length=600,
             orient="horizontal",
             value=0,
             variable=self.prog_bar)
-        self.progressbar.grid(column=0, row=0)
+        self.main_progressbar.grid(column=0, row=1)
         self.prog_label = ttk.Label(self.frame1)
-        self.prog_label.configure(
-            text='100%',
-            width=5)
-        self.prog_label.grid(column=2, row=0)
+        self.prog_label.configure(text='100%', width=5)
+        self.prog_label.grid(column=2, row=1)
         self.space_lbl = ttk.Label(self.frame1)
         self.space_lbl.configure(text='  ')
-        self.space_lbl.grid(column=1, row=0)
+        self.space_lbl.grid(column=1, row=1)
+        self.curr_pos_label = ttk.Label(self.frame1)
+        self.curr_pos_label.configure(text='- / -')
+        self.curr_pos_label.grid(row=2)
+        self.mark_label = ttk.Label(self.frame1)
+        self.mark_label.configure(text='mark')
+        self.mark_label.grid(row=3)
         self.frame1.pack(fill="both", side="top")
         self.frame1.grid_anchor("s")
-        self.curr_pos_label = ttk.Label(self.master)
-        self.curr_pos_label.configure(text='- / -')
-        self.curr_pos_label.pack(side="top")
-        self.mark_label = ttk.Label(self.master)
-        self.mark_label.configure(text='mark')
-        self.mark_label.pack(side="top")
 
 
 
@@ -59,7 +57,7 @@ class ProgressWidget:
         self.total = abs(total)
         self.jump = abs(jump)
         self.set_title(title)
-        self.progressbar['maximum'] = self.total
+        self.main_progressbar['maximum'] = self.total
         self.prog_bar.set(0)
         self.prog_label['text'] = self.FORMAT_PERC.format(0)
         self.curr_pos_label['text'] = self.FORMAT_PROG_NUM.format('-', '-')

@@ -32,7 +32,7 @@ class ProgBarGUIControl(IProgBar):
         if self.prog_widget is not None:
             self.prog_widget = None
 
-def ctor_widget_prog_by_widget(prog_widget: ProgressWidget):
+def ctor_control_prog_by_widget(prog_widget: ProgressWidget):
     def ctor_inner_prog_widget(*args, **kwargs):
         return ProgBarGUIControl(prog_widget, *args, **kwargs)
 
