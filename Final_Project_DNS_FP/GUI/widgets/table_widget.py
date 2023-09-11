@@ -55,7 +55,7 @@ def create_table_window(columns, lines):
     frame_scroll_x.config(command=table.xview)
 
     #set the table data
-    set_data_to_tables(table=table, columns=columns, lines=lines)
+    set_data_to_tables(table_widg=table, columns=columns, lines=lines)
     btn = ttk.Button(ws, text='CLICK')
     btn.pack(side=TOP)
 
@@ -65,14 +65,13 @@ def create_table_window(columns, lines):
 
 CLMN_NAME = 'column name'
 CLMN_TXT = 'column text'
-def set_data_to_tables(table, columns, lines):
-    table['columns'] = columns
+def set_data_to_tables(table_widg, columns, lines):
+    table_widg['columns'] = columns
     keys_of_cols = {}
 
-
     # format our column
-    table.column("#0", width=20, anchor=CENTER, stretch=NO)
-    table.heading("#0", text="", anchor=CENTER)
+    table_widg.column("#0", width=20, anchor=CENTER, stretch=NO)
+    table_widg.heading("#0", text="", anchor=CENTER)
     is_first = True
     for title_og in columns:
 
@@ -80,20 +79,20 @@ def set_data_to_tables(table, columns, lines):
         col_text = col_var.replace('_', ' ').title()
 
         try:
-            table.column(col_var, anchor=CENTER, stretch=YES)    # sometimes name can trigger the try_catch
+            table_widg.column(col_var, anchor=CENTER, stretch=YES)    # sometimes name can trigger the try_catch
         except:
             col_var = replace_whitespace(title_og, replacement='_')
-            table.column(col_var, anchor=CENTER, stretch=YES)
+            table_widg.column(col_var, anchor=CENTER, stretch=YES)
         finally:
-            table.heading(col_var, text=col_text, anchor=CENTER)
+            table_widg.heading(col_var, text=col_text, anchor=CENTER)
 
     for line in lines:
         if not isinstance(line[2], Iterable) or isinstance(line[2], str):
-            table.insert(parent='', index='end', values=line)
+            table_widg.insert(parent='', index='end', values=line)
             continue
-        row = table.insert(parent='', index='end', values=line[:2] + ('...',))
+        row = table_widg.insert(parent='', index='end', values=line[:2] + ('...',))
         for val in line[2]:
-            table.insert(parent=row, index='end', values=('', '', val))
+            table_widg.insert(parent=row, index='end', values=('', '', val))
 
 # def set_data_to_tables(table, columns, lines):
 #     table['columns'] = columns[1:]

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from GUI.prog_set import *
+from GUI.widgets.progress_widegt.prog_widget import *
 
 class RunMe:
     def __init__(self, master=None):
@@ -8,9 +8,10 @@ class RunMe:
         toplevel1 = tk.Tk() if master is None else tk.Toplevel(master)
         toplevel1.configure(height=200, width=200)
         toplevel1.geometry("1024x768")
-        self.prog_frame_1 = ProgressSet(toplevel1, jump=10)
-        self.prog_frame_2 = ProgressSet(toplevel1, jump=15)
-        self.prog_frame_3 = ProgressSet(toplevel1, jump=20)
+        self.prog_frame_1 = ProgressWidget(toplevel1, jump=10)
+        self.prog_frame_2 = ProgressWidget(toplevel1, jump=15)
+        self.prog_frame_3 = ProgressWidget(toplevel1, jump=20)
+
         button3 = ttk.Button(toplevel1)
         button3.configure(text='press me')
         button3.pack(side="top")
@@ -24,7 +25,7 @@ class RunMe:
     def push_all(self):
         self.prog_frame_1.update_bar()
         self.prog_frame_2.update_bar()
-        self.prog_frame_3.update_bar()
+        self.prog_frame_3()  # self.prog_frame_3.update_bar()
 
 
 if __name__ == "__main__":

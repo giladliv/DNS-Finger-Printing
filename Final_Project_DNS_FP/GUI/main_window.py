@@ -1,16 +1,28 @@
 #!/usr/bin/python3
+import time
 import tkinter as tk
 import tkinter.ttk as ttk
 from DB.dns_db import *
 from GUI.widgets.combobox_widget import *
 from dns_engine.dns_req_machine import DNS_FP_runner
-from GUI.confirm_window import ConfirmDeatilsWindow
+from GUI.confirm_window import ConfirmDeatilsWindow, ConfirmWinTry
+from GUI.helper_classes.window import Window
 
-class MainWindow:
+class MainWindow(Window):
     NAMES = ['Gilad', 'David', 'Irit']
-    def __init__(self, master=None, db = DNSJsonDB()):
+    def __init__(self, wind_master: Window = None, db = DNSJsonDB()):
         # build ui
-        self.toplevel = tk.Tk() if master is None else tk.Toplevel(master)
+        super().__init__(wind_master=wind_master)
+        self.__init_window()
+
+        #self.__set_validation_widget(self.combo_tester_name)
+        self.db = db
+        self.set_checkbox_options()
+
+        # Main widget
+        self.mainwindow = self.toplevel
+
+    def __init_window(self):
         self.toplevel.configure(height=200, width=200)
         self.toplevel.geometry("1152x768")
         self.toplevel.title("DNS FP Make Test")
@@ -38,16 +50,9 @@ class MainWindow:
         self.button1.configure(text='RUN')
         self.button1.grid(column=2, row=10)
         self.button1.configure(command=self.run_test)
-        self.combo_tester_name = ComboBoxWidget(self.frame1)    #, values_selection=self.NAMES)#, completevalues=self.NAMES)
+        self.combo_tester_name = ComboBoxWidget(self.frame1)
         self.combo_tester_name.configure(width=25)
         self.combo_tester_name.grid(column=2, row=0, sticky="ew")
-        # _validatecmd = (
-        #     self.combo_tester_name.register(
-        #         self.checkbox_validate), "%P")
-        # self.combo_tester_name.configure(validatecommand=_validatecmd)
-        # _validatecmd = (
-        #     self.combo_tester_name.register(
-        #         self.on_invalid), "%P", '%S', self.combo_tester_name)
 
         self.combo_site = ComboBoxWidget(self.frame1)
         self.combo_site.grid(column=2, row=2, sticky="ew")
@@ -65,18 +70,11 @@ class MainWindow:
         self.frame1.columnconfigure(1, minsize=5)
         self.frame1.columnconfigure("all", minsize=20)
 
-        #self.__set_validation_widget(self.combo_tester_name)
-        self.db = db
-        self.set_checkbox_options()
-
-        # Main widget
-        self.mainwindow = self.toplevel
-
-
     def run(self):
         self.mainwindow.mainloop()
 
     def run_test(self):
+
         print('button clicked')
         print('selected', self.combo_tester_name.get())
         print(self.combo_dns_servers.get())
@@ -94,8 +92,13 @@ class MainWindow:
         confirm_details_win = ConfirmDeatilsWindow(tester=tester_name, site=site,
                                                    dns_servers=(selected_srv_nams, dns_servers),
                                                    domain_names=(selected_dm_nams, domain_names), session_name=session_name)
-        from GUI.widgets.table_widget import create_table_window
-        create_table_window(*confirm_details_win.get_as_table_data())
+
+        #from GUI.widgets.table_widget import create_table_window
+        conf = ConfirmWinTry(self, *confirm_details_win.get_as_table_data())
+        # conf.show_window()
+        self.hide_window()
+        print("end click")
+
 
 
     def set_checkbox_options(self):
@@ -114,3 +117,4 @@ class MainWindow:
 if __name__ == "__main__":
     app = MainWindow()
     app.run()
+

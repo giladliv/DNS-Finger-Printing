@@ -3,7 +3,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 
 
-class ProgressSet:
+class ProgressWidget:
     FORMAT_PERC = '{}%'
     FORMAT_PROG_NUM = '{0} / {1}'
     FORMAT_MARK = '{}\n'
@@ -18,7 +18,7 @@ class ProgressSet:
         self.__build_visual(master)
 
         # set the basic data
-        self.set_progress(max_size, jump)
+        self.set_progress(max_size=max_size, jump=jump, title=title)
 
     def __build_visual(self, master):
         self.master = master
@@ -55,7 +55,7 @@ class ProgressSet:
 
 
 
-    def set_progress(self, max_size: int = 100, jump: int = 1):
+    def set_progress(self, max_size: int = 100, jump: int = 1, title: str = ''):
         self.max_size = abs(max_size)
         self.jump = abs(jump)
         self.progressbar['maximum'] = self.max_size
@@ -63,6 +63,7 @@ class ProgressSet:
         self.prog_label['text'] = self.FORMAT_PERC.format(0)
         self.curr_pos_label['text'] = self.FORMAT_PROG_NUM.format('-', '-')
         self.mark_label['text'] = self.FORMAT_MARK.format('')
+
     def __make_move_proccess(self, n: int):     # for jumping in several options
         curr_pos = self.prog_bar.get()          # get the current position
         if n >= 0:
@@ -87,6 +88,8 @@ class ProgressSet:
     def update_bar(self):
         self.__make_move_proccess(self.jump)
 
+    def __call__(self, *args, **kwargs):
+        self.update_bar()
 
     @staticmethod
     def get_percent_fixed(n, max_num: int = 100, after_dot=2):
@@ -95,3 +98,7 @@ class ProgressSet:
             return int(n)
         else:
             return round(n, after_dot)
+
+    def set_title(self, title: str = 'title'):
+        self.title_lable['text'] = title
+

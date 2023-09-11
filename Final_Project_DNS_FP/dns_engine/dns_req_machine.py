@@ -236,7 +236,7 @@ def wait_bar(interval_wait_sec: int = INTERVAL_WAIT_SEC):
     @param interval_wait_sec: number of seconds to wait
     """
     sec_time = interval_wait_sec if (interval_wait_sec > 0) else INTERVAL_WAIT_SEC
-    with alive_bar(sec_time, title=f'Wait now {sec_time} seconds', theme='classic') as bar:
+    with alive_bar(sec_time, title=f'Wait now {sec_time} seconds', theme='classic', force_tty=True) as bar:
         for i in range(sec_time):
             time.sleep(1)
             bar()
@@ -244,3 +244,20 @@ def wait_bar(interval_wait_sec: int = INTERVAL_WAIT_SEC):
 def get_domain_name_list(file_name_domains: str):
     with open(file_name_domains, 'r') as f:
         return [s.replace('\n', '') for s in f.readlines()]
+
+# wait_bar()
+
+from utils.prog_bar_classes import *
+def wait_bar_new(interval_wait_sec: int = INTERVAL_WAIT_SEC, ProgClass = AliveProgBar):
+    """
+    creates a waiting progress bar for x seconds
+    @param interval_wait_sec: number of seconds to wait
+    """
+    sec_time = interval_wait_sec if (interval_wait_sec > 0) else INTERVAL_WAIT_SEC
+    bar = ProgClass(sec_time, title=f'Wait now {sec_time} seconds')
+
+    for i in range(sec_time):
+        time.sleep(1)
+        bar()
+
+wait_bar_new()
