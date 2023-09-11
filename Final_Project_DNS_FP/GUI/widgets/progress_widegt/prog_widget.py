@@ -8,17 +8,17 @@ class ProgressWidget:
     FORMAT_PROG_NUM = '{0} / {1}'
     FORMAT_MARK = '{}\n'
 
-    def __init__(self, master, max_size: int = 100, jump: int = 1, title: str = 'title'):
+    def __init__(self, master, total: int = 100, jump: int = 1, title: str = 'title'):
         # build ui
         # TODO: check validity
         self.jump = 0
-        self.max_size = 0
+        self.total = 0
 
         # build the UI
         self.__build_visual(master)
 
         # set the basic data
-        self.set_progress(max_size=max_size, jump=jump, title=title)
+        self.set_progress(total=total, jump=jump, title=title)
 
     def __build_visual(self, master):
         self.master = master
@@ -55,10 +55,11 @@ class ProgressWidget:
 
 
 
-    def set_progress(self, max_size: int = 100, jump: int = 1, title: str = ''):
-        self.max_size = abs(max_size)
+    def set_progress(self, total: int = 100, jump: int = 1, title: str = ''):
+        self.total = abs(total)
         self.jump = abs(jump)
-        self.progressbar['maximum'] = self.max_size
+        self.set_title(title)
+        self.progressbar['maximum'] = self.total
         self.prog_bar.set(0)
         self.prog_label['text'] = self.FORMAT_PERC.format(0)
         self.curr_pos_label['text'] = self.FORMAT_PROG_NUM.format('-', '-')
@@ -67,19 +68,19 @@ class ProgressWidget:
     def __make_move_proccess(self, n: int):     # for jumping in several options
         curr_pos = self.prog_bar.get()          # get the current position
         if n >= 0:
-            curr_pos = min(curr_pos + n, self.max_size)     # for every positive move update and take the lowest
+            curr_pos = min(curr_pos + n, self.total)     # for every positive move update and take the lowest
         else:
             curr_pos = max(curr_pos + n, 0)     # for every negative move update and take the highest (0 not changing)
         self.__set_position(curr_pos)
 
     def __set_position(self, curr_pos: int):
-        if curr_pos < 0 or curr_pos > self.max_size:
+        if curr_pos < 0 or curr_pos > self.total:
             return False
         # update percentage
-        self.prog_label['text'] = self.FORMAT_PERC.format(self.get_percent_fixed(curr_pos, self.max_size))
+        self.prog_label['text'] = self.FORMAT_PERC.format(self.get_percent_fixed(curr_pos, self.total))
         # update how many completed
-        self.curr_pos_label['text'] = self.FORMAT_PROG_NUM.format(curr_pos, self.max_size)
-        # self.mark_label['text'] = self.FORMAT_MARK.format(f'{curr_pos} / {self.max_size}')
+        self.curr_pos_label['text'] = self.FORMAT_PROG_NUM.format(curr_pos, self.total)
+        # self.mark_label['text'] = self.FORMAT_MARK.format(f'{curr_pos} / {self.total}')
         self.prog_bar.set(curr_pos)
         return True
 
@@ -101,4 +102,4 @@ class ProgressWidget:
 
     def set_title(self, title: str = 'title'):
         self.title_lable['text'] = title
-
+        
