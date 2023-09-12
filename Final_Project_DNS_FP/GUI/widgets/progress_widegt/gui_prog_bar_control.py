@@ -32,8 +32,19 @@ class ProgBarGUIControl(IProgBar):
         if self.prog_widget is not None:
             self.prog_widget = None
 
+    def total_rounds(self):
+        try:
+            return self.prog_widget.total_rounds()
+        except:
+            return 0
+
 def ctor_control_prog_by_widget(prog_widget: ProgressWidget):
-    def ctor_inner_prog_widget(*args, **kwargs):
+    '''
+    return a c'tor function for progressbar based on a prog GUI Widget
+    :param prog_widget:
+    :return:
+    '''
+    def ctor_inner_prog_widget(*args, **kwargs) -> ProgBarGUIControl:
         return ProgBarGUIControl(prog_widget, *args, **kwargs)
 
     return ctor_inner_prog_widget

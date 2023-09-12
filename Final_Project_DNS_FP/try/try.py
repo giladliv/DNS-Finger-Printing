@@ -39,3 +39,8 @@ tuple_list = dict_to_tuple_list(nested_dict)
 
 for item in tuple_list:
     print(item)
+
+a = 16 / 5
+from math import ceil
+print('a =', a, '\t', 'type =', type(a))
+print(ceil(a))

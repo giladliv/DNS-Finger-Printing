@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import tkinter as tk
 import tkinter.ttk as ttk
-
+from math import ceil
 
 class ProgressWidget:
     FORMAT_PERC = '{}%'
@@ -13,6 +13,7 @@ class ProgressWidget:
         # TODO: check validity
         self.jump = 0
         self.total = 0
+        self.__rounds = 0
 
         # build the UI
         self.__build_visual(master)
@@ -22,7 +23,7 @@ class ProgressWidget:
 
     def __build_visual(self, master):
         self.master = master
-
+        # copied from pygubu-designer
         self.frame1 = ttk.Frame(self.master)
         self.frame1.configure(height=40, width=800)
         self.title_lable = ttk.Label(self.frame1)
@@ -52,16 +53,35 @@ class ProgressWidget:
         self.frame1.grid_anchor("s")
 
 
-
     def set_progress(self, total: int = 100, jump: int = 1, title: str = ''):
         self.total = abs(total)
         self.jump = abs(jump)
+        self.__rounds = ceil(self.total / self.jump)
+
         self.set_title(title)
         self.main_progressbar['maximum'] = self.total
         self.prog_bar.set(0)
         self.prog_label['text'] = self.FORMAT_PERC.format(0)
         self.curr_pos_label['text'] = self.FORMAT_PROG_NUM.format('-', '-')
         self.mark_label['text'] = self.FORMAT_MARK.format('')
+
+    def set_title(self, title: str = 'title'):
+        self.title_lable['text'] = title
+
+    def update_bar(self):
+        # update bar for move
+        self.__make_move_proccess(self.jump)
+        self.refresh_wind()
+
+    def refresh_wind(self):
+        self.frame1.update()
+
+    def __call__(self, *args, **kwargs):
+        self.update_bar()
+
+    def total_rounds(self):
+        # return how many rounds for the bar
+        return self.__rounds
 
     def __make_move_proccess(self, n: int):     # for jumping in several options
         curr_pos = self.prog_bar.get()          # get the current position
@@ -82,14 +102,6 @@ class ProgressWidget:
         self.prog_bar.set(curr_pos)
         return True
 
-
-    # update bar for move
-    def update_bar(self):
-        self.__make_move_proccess(self.jump)
-
-    def __call__(self, *args, **kwargs):
-        self.update_bar()
-
     @staticmethod
     def get_percent_fixed(n, max_num: int = 100, after_dot=2):
         n = n / max_num * 100
@@ -97,7 +109,3 @@ class ProgressWidget:
             return int(n)
         else:
             return round(n, after_dot)
-
-    def set_title(self, title: str = 'title'):
-        self.title_lable['text'] = title
-        
