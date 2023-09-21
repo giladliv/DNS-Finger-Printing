@@ -68,7 +68,9 @@ class AliveProgBar(IProgBar):
         debug_print(str(self.__class__.__name__))
         self.bar = None
         self.set_bar(total, title)
+
     def set_bar(self, total: int, title: str = ''):
+        self.close()
         self.bar = alive_bar_new(total, title=title, theme='classic', force_tty=True)
 
     def update_bar(self):

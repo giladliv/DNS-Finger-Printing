@@ -4,7 +4,6 @@ class FrameManager:
     def __init__(self, root: tk.Tk):
         self.root = root
         self.root.title("Frame Manager")
-        self.root.geometry('1024x768')
 
         self.frame1 = tk.Frame(self.root, width=200, height=100, bg="red")
         self.frame1.grid(row=0, column=0)
@@ -43,7 +42,7 @@ class FrameManager:
         self.grid_size()
 
     def show_frame1(self):
-        self.frame1.grid()
+        self.frame1.grid(row=0, column=0)
         self.grid_size()
 
     def hide_frame1(self):
@@ -51,7 +50,7 @@ class FrameManager:
         self.grid_size()
 
     def show_frame2(self):
-        self.frame2.grid()
+        self.frame2.grid(row=0, column=1)
         self.grid_size()
 
     def hide_frame2(self):
@@ -59,7 +58,7 @@ class FrameManager:
         self.grid_size()
 
     def show_frame3(self):
-        self.frame3.grid()
+        self.frame3.grid(row=1, column=0, columnspan=2)
         self.grid_size()
 
     def hide_frame3(self):

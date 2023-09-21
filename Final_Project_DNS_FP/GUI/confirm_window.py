@@ -105,13 +105,17 @@ class ConfirmWinTry(Window):
 
         #set the table data
         self.set_data_to_tables(table_widg=table, columns=columns, lines=lines)
-        btn = ttk.Button(self.toplevel, text='CLICK')
+        btn = ttk.Button(self.toplevel, text='Agree')
+        btn.config(command=self.btn_function)
         btn.pack(side=tk.TOP)
 
 
+
     def btn_function(self):
-        self.set_show_prev_wind(False)
-        self.destroy_wind()
+        # self.set_show_prev_wind(False)
+        # self.destroy_wind()
+        # TODO: move the window to the next
+        pass
 
     def set_data_to_tables(self, table_widg, columns, lines):
         table_widg['columns'] = columns

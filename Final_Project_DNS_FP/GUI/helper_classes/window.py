@@ -10,8 +10,9 @@ class Window:
         self.__to_show_prev_wind = True
         self.__connected_winds = set()
         self.__connect_win_from_parent()
+        self.init_window()
 
-    def __init_window(self):
+    def init_window(self):
         pass
 
     def __connect_win_from_parent(self):
@@ -48,3 +49,6 @@ class Window:
 
     def destroy_wind(self):
         self.toplevel.destroy()
+
+    def run_window(self):
+        self.toplevel.mainloop()

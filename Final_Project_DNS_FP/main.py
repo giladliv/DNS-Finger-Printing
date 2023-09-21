@@ -12,7 +12,8 @@ def main():
     # for name in run_result:
     #     print(f'{name}:')
     #     pprint.pprint(runner.get_data_from_pkts(run_result[name]))
-    run_session('8.8.8.8', list_names=names)
+    return_data = run_session_ip_list(['8.8.8.8'], list_names=names)
+    pprint.pprint(return_data)
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':

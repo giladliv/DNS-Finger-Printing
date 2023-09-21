@@ -196,8 +196,7 @@ class DNS_FP_runner:
 
 def run_session(DNS_address: str, list_names: list, session_name: str = '', repeats: int = 8,
                 interval_wait_sec: int = INTERVAL_WAIT_SEC, is_first_rec: bool = True,
-                to_show_results: bool = True, json_file_name: str = JSON_FILE_NAME_DEFAULT,
-                progerss_bar=AliveProgBar, prog_wait_class=AliveProgBar):
+                to_show_results: bool = True, json_file_name: str = JSON_FILE_NAME_DEFAULT):
     """
     run session of queries
     """
@@ -209,17 +208,16 @@ def run_session(DNS_address: str, list_names: list, session_name: str = '', repe
         is_rec = (i == 0) and is_first_rec
         str_title = f'round %d out of %d' % (i + 1, repeats)
         list_ans_vals += \
-            [dns_fp_run.run_names_with_dns(is_recursive=is_rec, title=str_title, label_session=session_name, progerss_bar=progerss_bar)]
+            [dns_fp_run.run_names_with_dns(is_recursive=is_rec, title=str_title, label_session=session_name)]
         if i == repeats - 1:
             continue
-        wait_bar_new(interval_wait_sec, ProgClass=prog_wait_class)
+        wait_bar(interval_wait_sec)
 
     return list_ans_vals, session_name
 
 def run_session_ip_list(DNS_address_list: list, list_names: list, session_name: str = '', repeats: int = 8,
                 interval_wait_sec: int = INTERVAL_WAIT_SEC, is_first_rec: bool = True,
-                to_show_results: bool = True, json_file_name: str = JSON_FILE_NAME_DEFAULT,
-                progerss_bar_ip=AliveProgBar, progerss_bar_domain=AliveProgBar, prog_wait_class=AliveProgBar):
+                to_show_results: bool = True, json_file_name: str = JSON_FILE_NAME_DEFAULT):
     """
     run session of queries
     """
@@ -229,8 +227,7 @@ def run_session_ip_list(DNS_address_list: list, list_names: list, session_name: 
         # TODO - enter saving data
         list_ans_vals, _ = run_session(dns_addr, list_names, session_name=session_name, repeats=repeats,
                     interval_wait_sec=interval_wait_sec, is_first_rec=is_first_rec,
-                    to_show_results=to_show_results, json_file_name=json_file_name,
-                    progerss_bar=progerss_bar_domain, prog_wait_class=prog_wait_class)
+                    to_show_results=to_show_results, json_file_name=json_file_name)
         dict_ans_vals[dns_addr] = list_ans_vals
 
     return dict_ans_vals, session_name

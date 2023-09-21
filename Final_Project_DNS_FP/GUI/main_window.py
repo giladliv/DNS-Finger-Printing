@@ -13,7 +13,6 @@ class MainWindow(Window):
     def __init__(self, wind_master: Window = None, db = DNSJsonDB()):
         # build ui
         super().__init__(wind_master=wind_master)
-        self.__init_window()
 
         #self.__set_validation_widget(self.combo_tester_name)
         self.db = db
@@ -22,7 +21,7 @@ class MainWindow(Window):
         # Main widget
         self.mainwindow = self.toplevel
 
-    def __init_window(self):
+    def init_window(self):
         self.toplevel.configure(height=200, width=200)
         self.toplevel.geometry("1152x768")
         self.toplevel.title("DNS FP Make Test")

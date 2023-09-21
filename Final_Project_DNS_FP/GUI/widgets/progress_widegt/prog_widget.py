@@ -3,17 +3,19 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from math import ceil
 
-class ProgressWidget:
+class ProgressWidget(ttk.Frame):
     FORMAT_PERC = '{}%'
     FORMAT_PROG_NUM = '{0} / {1}'
     FORMAT_MARK = '{}\n'
 
-    def __init__(self, master, total: int = 100, jump: int = 1, title: str = 'title'):
+    def __init__(self, master, total: int = 100, jump: int = 1, title: str = 'title', *args, **kwargs):
         # build ui
         # TODO: check validity
+        super().__init__(master, *args, **kwargs)
         self.jump = 0
         self.total = 0
         self.__rounds = 0
+        self.__grid_data = self.grid_info()
 
         # build the UI
         self.__build_visual(master)
@@ -24,12 +26,11 @@ class ProgressWidget:
     def __build_visual(self, master):
         self.master = master
         # copied from pygubu-designer
-        self.frame1 = ttk.Frame(self.master)
-        self.frame1.configure(height=40, width=800)
-        self.title_lable = ttk.Label(self.frame1)
+        self.configure(height=40, width=800)
+        self.title_lable = ttk.Label(self)
         self.title_lable.configure(text='title')
         self.title_lable.grid(column=0, row=0)
-        self.main_progressbar = ttk.Progressbar(self.frame1)
+        self.main_progressbar = ttk.Progressbar(self)
         self.prog_bar = tk.IntVar(value=0)
         self.main_progressbar.configure(
             length=600,
@@ -37,20 +38,25 @@ class ProgressWidget:
             value=0,
             variable=self.prog_bar)
         self.main_progressbar.grid(column=0, row=1)
-        self.prog_label = ttk.Label(self.frame1)
+        self.prog_label = ttk.Label(self)
         self.prog_label.configure(text='100%', width=5)
         self.prog_label.grid(column=2, row=1)
-        self.space_lbl = ttk.Label(self.frame1)
+        self.space_lbl = ttk.Label(self)
         self.space_lbl.configure(text='  ')
         self.space_lbl.grid(column=1, row=1)
-        self.curr_pos_label = ttk.Label(self.frame1)
+        self.curr_pos_label = ttk.Label(self)
         self.curr_pos_label.configure(text='- / -')
         self.curr_pos_label.grid(row=2)
-        self.mark_label = ttk.Label(self.frame1)
+        self.mark_label = ttk.Label(self)
         self.mark_label.configure(text='mark')
         self.mark_label.grid(row=3)
-        self.frame1.pack(fill="both", side="top")
-        self.frame1.grid_anchor("s")
+
+        # self.pack(fill="both", side="top")
+        # cols, rows = self.master.grid_size()
+        # self.grid(row=rows, column=0)
+        self.grid_anchor("s")
+        print(self.grid_info())
+        # self.grid(**self.grid_info())
 
 
     def set_progress(self, total: int = 100, jump: int = 1, title: str = ''):
@@ -74,7 +80,7 @@ class ProgressWidget:
         self.refresh_wind()
 
     def refresh_wind(self):
-        self.frame1.update()
+        self.update()
 
     def __call__(self, *args, **kwargs):
         self.update_bar()
@@ -109,3 +115,16 @@ class ProgressWidget:
             return int(n)
         else:
             return round(n, after_dot)
+
+    def grid(self, *args, **kwargs):
+        super().grid(*args, **kwargs)
+        self.__grid_data = self.grid_info()
+        # print('grid me')
+
+    def show_prog_bar(self):
+        self.grid(self.__grid_data)
+
+    def hide_prog_bar(self):
+        self.grid_forget()
+
+
