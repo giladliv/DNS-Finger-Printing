@@ -22,6 +22,9 @@ class ThreadWithReturnValue(Thread):
         if self._target is not None:
             self._return = self._target(*self._args, **self._kwargs)
 
+    def get_ret(self):
+        return self._return
+
     def join(self, **kwargs):
         Thread.join(self)
         return self._return
@@ -31,26 +34,29 @@ class ThreadWithReturnValue(Thread):
 #
 # twrv.start()
 # print(twrv.join())   # prints foo
-
-twrv1 = ThreadWithReturnValue(target=foo_y, kwargs={'title': 'th 1'})
-twrv2 = ThreadWithReturnValue(target=foo_y, kwargs={'title': 'th 2'})
+levels = 5
+twrv1 = ThreadWithReturnValue(target=foo_y, kwargs={'title': 'th 1', 'n': levels})
+# twrv2 = ThreadWithReturnValue(target=foo_y, kwargs={'title': 'th 2', 'n': levels})
 
 twrv1.start()
-twrv2.start()
+# twrv2.start()
 
-gen1 = twrv1.join()
-gen2 = twrv2.join()
+# gen1 = twrv1.join()
+# gen2 = twrv2.join()
+#
+# while gen1 is not None or gen2 is not None:
+#     try:
+#         next(gen1)
+#     except:
+#         gen1 = None
+#
+#     try:
+#         next(gen2)
+#     except:
+#         gen2 = None
 
-while gen1 is not None or gen2 is not None:
-    try:
-        next(gen1)
-    except:
-        gen1 = None
-
-    try:
-        next(gen2)
-    except:
-        gen2 = None
+for i in range(levels):
+    print(next(twrv1.join()))
 
 # print(twrv2.join())
 

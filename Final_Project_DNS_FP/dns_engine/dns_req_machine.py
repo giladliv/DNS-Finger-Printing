@@ -225,13 +225,15 @@ def run_session_ip_list(DNS_address_list: list, list_names: list, session_name: 
     """
     session_name = DNS_FP_runner.gen_session_name(session_name)
     dict_ans_vals = {}
-    for dns_addr in DNS_address_list:
-        # TODO - enter saving data
-        list_ans_vals, _ = run_session(dns_addr, list_names, session_name=session_name, repeats=repeats,
-                    interval_wait_sec=interval_wait_sec, is_first_rec=is_first_rec,
-                    to_show_results=to_show_results, json_file_name=json_file_name,
-                    progerss_bar=progerss_bar_domain, prog_wait_class=prog_wait_class)
-        dict_ans_vals[dns_addr] = list_ans_vals
+    with progerss_bar_ip(len(DNS_address_list), title='running addresses') as bar:
+        for dns_addr in DNS_address_list:
+            # TODO - enter saving data
+            list_ans_vals, _ = run_session(dns_addr, list_names, session_name=session_name, repeats=repeats,
+                        interval_wait_sec=interval_wait_sec, is_first_rec=is_first_rec,
+                        to_show_results=to_show_results, json_file_name=json_file_name,
+                        progerss_bar=progerss_bar_domain, prog_wait_class=prog_wait_class)
+            dict_ans_vals[dns_addr] = list_ans_vals
+            bar()
 
     return dict_ans_vals, session_name
 

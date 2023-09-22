@@ -89,8 +89,7 @@ class DNSDataProgWin(Window):
 
     def make_run_session(self, DNS_address_list: list = [], list_names: list = [], session_name: str = '',
                          repeats: int = 8, interval_wait_sec: int = INTERVAL_WAIT_SEC, is_first_rec: bool = True,
-                         to_show_results: bool = True, json_file_name: str = JSON_FILE_NAME_DEFAULT,
-                         progerss_bar_ip=AliveProgBar, progerss_bar_domain=AliveProgBar, prog_wait_class=AliveProgBar):
+                         to_show_results: bool = True, json_file_name: str = JSON_FILE_NAME_DEFAULT):
         self.run_data = run_session_ip_list(DNS_address_list=DNS_address_list, list_names=list_names,
                                             session_name=session_name,
                                             repeats=repeats, interval_wait_sec=interval_wait_sec,
