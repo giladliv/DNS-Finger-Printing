@@ -93,7 +93,7 @@ class MainWindow(Window):
                                                    domain_names=(selected_dm_nams, domain_names), session_name=session_name)
 
         #from GUI.widgets.table_widget import create_table_window
-        conf = ConfirmWinTry(self, *confirm_details_win.get_as_table_data())
+        conf = ConfirmWinTry(wind_master=self, **confirm_details_win.get_as_table_data())
         # conf.show_window()
         self.hide_window()
         print("end click")

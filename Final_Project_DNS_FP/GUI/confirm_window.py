@@ -40,7 +40,7 @@ class ConfirmDeatilsWindow:
             curr_line += ('',)*(col_len - len(curr_line))
             # add the line to the list of lines
             lines += [curr_line]
-        return tuple(self.COLUMNS), lines
+        return {'columns': tuple(self.COLUMNS), 'lines': lines}
 
 
 
@@ -74,11 +74,11 @@ class ConfirmWinTry(Window):
     CLMN_NAME = 'column name'
     CLMN_TXT = 'column text'
 
-    def __init__(self, wind_master: Window, columns, lines):
+    def __init__(self, wind_master: Window, columns=[], lines=[]):
         super().__init__(wind_master)
         self.create_table_window(columns, lines)
 
-    def create_table_window(self, columns, lines):
+    def create_table_window(self, columns = [], lines = []):
         # columns, lines = table_overlook_repair(columns, lines)
         print(columns, lines, sep='\n'+"*"*50+'\n')
 

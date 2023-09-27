@@ -32,6 +32,10 @@ def try1():
 
 
 
+
+
+
+
     # Add tasks
     task1 = progress.add_task("[red]Downloading", total=1000)
     task2 = progress.add_task("[green]Processing", total=1000)

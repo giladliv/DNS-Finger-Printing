@@ -90,6 +90,7 @@ class DNSDataProgWin(Window):
     def make_run_session(self, DNS_address_list: list = [], list_names: list = [], session_name: str = '',
                          repeats: int = 8, interval_wait_sec: int = INTERVAL_WAIT_SEC, is_first_rec: bool = True,
                          to_show_results: bool = True, json_file_name: str = JSON_FILE_NAME_DEFAULT):
+        repeats = 2
         self.run_data = run_session_ip_list(DNS_address_list=DNS_address_list, list_names=list_names,
                                             session_name=session_name,
                                             repeats=repeats, interval_wait_sec=interval_wait_sec,
@@ -99,6 +100,10 @@ class DNSDataProgWin(Window):
                                             progerss_bar_domain=self.domain_names_bar_class_maker,
                                             prog_wait_class=self.wait_bar_class_maker)
         pprint.pprint(self.run_data)
+        dict_data, session_name = self.run_data
+        print(IP(dict_data['8.8.8.8'][0]['4stringsjp.com']['pkt_recv']).summary())
+
+
 
 
 dns_db = DnsDBFiles()
