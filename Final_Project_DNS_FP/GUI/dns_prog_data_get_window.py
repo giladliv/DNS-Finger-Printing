@@ -101,7 +101,7 @@ class DNSDataProgWin(Window):
                                             prog_wait_class=self.wait_bar_class_maker)
         pprint.pprint(self.run_data)
         dict_data, session_name = self.run_data
-        print(IP(dict_data['8.8.8.8'][0]['4stringsjp.com']['pkt_recv']).summary())
+        print(IP(dict_data['8.8.8.8']['4stringsjp.com'][0]['pkt_recv'])['DNS'].summary())
 
 
 

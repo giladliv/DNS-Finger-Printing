@@ -204,17 +204,24 @@ def run_session(DNS_address: str, list_names: list, session_name: str = '', repe
     session_name = DNS_FP_runner.gen_session_name(session_name)
     dns_fp_run = DNS_FP_runner(DNS_address, list_names, json_file_name)
 
-    list_ans_vals = []
+    # list_ans_vals = []
+    dict_result_requests = {}
     for i in range(repeats):
         is_rec = (i == 0) and is_first_rec
         str_title = f'round %d out of %d' % (i + 1, repeats)
-        list_ans_vals += \
-            [dns_fp_run.run_names_with_dns(is_recursive=is_rec, title=str_title, label_session=session_name, progerss_bar=progerss_bar)]
+        # list_ans_vals += \
+        #     [dns_fp_run.run_names_with_dns(is_recursive=is_rec, title=str_title, label_session=session_name, progerss_bar=progerss_bar)]
+        result_from_eng = dns_fp_run.run_names_with_dns(is_recursive=is_rec, title=str_title, label_session=session_name, progerss_bar=progerss_bar)
+        for addr in result_from_eng:
+            if addr not in dict_result_requests:    # if not in the dict then set an empty list
+                dict_result_requests[addr] = []
+            dict_result_requests[addr].append(result_from_eng[addr])    # add the result from address to the list
+
         if i == repeats - 1:
             continue
         wait_bar_new(interval_wait_sec, ProgClass=prog_wait_class)
 
-    return list_ans_vals, session_name
+    return dict_result_requests, session_name
 
 def run_session_ip_list(DNS_address_list: list, list_names: list, session_name: str = '', repeats: int = 8,
                 interval_wait_sec: int = INTERVAL_WAIT_SEC, is_first_rec: bool = True,
